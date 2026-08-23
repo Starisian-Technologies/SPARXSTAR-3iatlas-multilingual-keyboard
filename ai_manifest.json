@@ -1,0 +1,91 @@
+{
+  "repository": "sparxstar-3iatlas-multilingual-input",
+  "version": "0.1.0",
+  "namespace": "@starisian/3iatlas-multilingual-input",
+  "symbols": [
+    {
+      "symbol": "InputMode",
+      "type": "type",
+      "owner": "core",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "symbol": "LanguageProfile",
+      "type": "interface",
+      "owner": "core",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "symbol": "validateLanguageProfile",
+      "type": "function",
+      "owner": "core",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "symbol": "normalizeInputText",
+      "type": "function",
+      "owner": "core",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "symbol": "insertAtSelection",
+      "type": "function",
+      "owner": "core",
+      "path": "packages/core/src/index.ts"
+    },
+    {
+      "symbol": "NativeTextareaAdapter",
+      "type": "class",
+      "owner": "adapters",
+      "path": "packages/adapters/src/index.ts"
+    },
+    {
+      "symbol": "ControlledReactInputAdapter",
+      "type": "class",
+      "owner": "adapters",
+      "path": "packages/adapters/src/index.ts"
+    },
+    {
+      "symbol": "WordPadAdapter",
+      "type": "class",
+      "owner": "adapters",
+      "path": "packages/adapters/src/index.ts"
+    },
+    {
+      "symbol": "NoopKeymanAdapter",
+      "type": "class",
+      "owner": "keyman",
+      "path": "packages/keyman/src/index.ts"
+    },
+    {
+      "symbol": "MANDINKA_PROFILE",
+      "type": "const",
+      "owner": "profiles",
+      "path": "packages/profiles/src/index.ts"
+    },
+    {
+      "symbol": "WOLOF_PROFILE",
+      "type": "const",
+      "owner": "profiles",
+      "path": "packages/profiles/src/index.ts"
+    },
+    {
+      "symbol": "FULA_PROFILE",
+      "type": "const",
+      "owner": "profiles",
+      "path": "packages/profiles/src/index.ts"
+    },
+    {
+      "symbol": "RELEASE_ONE_PROFILES",
+      "type": "const",
+      "owner": "profiles",
+      "path": "packages/profiles/src/index.ts"
+    },
+    {
+      "symbol": "INPUT_MODE_OPTIONS",
+      "type": "const",
+      "owner": "react",
+      "path": "packages/react/src/index.ts"
+    }
+  ]
+}

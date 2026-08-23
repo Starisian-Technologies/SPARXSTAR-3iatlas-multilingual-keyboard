@@ -1,0 +1,19 @@
+{
+  "name": "@starisian/3iatlas-multilingual-input",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@starisian/3iatlas-multilingual-input-adapters": "workspace:*",
+    "@starisian/3iatlas-multilingual-input-core": "workspace:*",
+    "@starisian/3iatlas-multilingual-input-keyman": "workspace:*",
+    "@starisian/3iatlas-multilingual-input-profiles": "workspace:*",
+    "@starisian/3iatlas-multilingual-input-react": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit"
+  }
+}

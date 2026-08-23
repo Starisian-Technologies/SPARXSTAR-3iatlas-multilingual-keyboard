@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@starisian/3iatlas-multilingual-input-core": ["packages/core/src"],
+      "@starisian/3iatlas-multilingual-input-react": ["packages/react/src"],
+      "@starisian/3iatlas-multilingual-input-adapters": ["packages/adapters/src"],
+      "@starisian/3iatlas-multilingual-input-keyman": ["packages/keyman/src"],
+      "@starisian/3iatlas-multilingual-input-profiles": ["packages/profiles/src"]
+    }
+  }
+}

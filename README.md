@@ -1,50 +1,42 @@
-# Starisian Technologies Proprietary License
+# 3iAtlas Multilingual Input
 
-> **Template Repository** — Use this as the canonical source for all Starisian Technologies license language, file headers, and governance documents.
+Monorepo scaffold for the 3iAtlas multilingual input package family.
 
----
+## Packages
 
-## Overview
+- `@starisian/3iatlas-multilingual-input-core`
+- `@starisian/3iatlas-multilingual-input-react`
+- `@starisian/3iatlas-multilingual-input-adapters`
+- `@starisian/3iatlas-multilingual-input-keyman`
+- `@starisian/3iatlas-multilingual-input-profiles`
+- `@starisian/3iatlas-multilingual-input`
 
-This repository contains the official **Starisian Technologies Proprietary License** language, code ownership policies, and CI workflow templates. It is intended to be used as a **GitHub Template Repository** so that all new Starisian Technologies projects inherit consistent licensing, security, and governance scaffolding from day one.
+## Tooling
 
-**Lead Developer / IP Owner:** Max Barrett ([@StarisianDevelopment](https://github.com/starisiandevelopment))  
-**Organization:** [Starisian Technologies](https://github.com/Starisian-Technologies) / Max Barrett  
-**Jurisdiction:** Los Angeles, California
+- Package manager: `pnpm`
+- Language: TypeScript (`strict: true`)
+- Lint: ESLint
+- Test: Jest + ts-jest
+- Build: TypeScript package builds per workspace module
 
----
+## Quick start
 
-## Repository Contents
+```bash
+corepack enable
+corepack prepare pnpm@9.12.1 --activate
+pnpm install
+pnpm run lint:js
+pnpm test
+pnpm run build
+```
 
-| File / Path | Purpose |
-|---|---|
-| [`LICENSE.md`](./LICENSE.md) | Full proprietary license (public & private/commercial variants) |
-| [`LICENSE_HEADER.md`](./LICENSE_HEADER.md) | Copy-paste license headers for source files (full & short) |
-| [`CODE_OWNERSHIP.md`](./CODE_OWNERSHIP.md) | Technical governance and code ownership policy |
-| [`.github/CODEOWNERS`](.github/CODEOWNERS) | GitHub CODEOWNERS file — auto-assigns @MaximillianGroup to all reviews |
-| [`SECURITY.md`](./SECURITY.md) | Vulnerability reporting policy |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and CLA policy |
-| [`.github/workflows/lint-and-syntax.yml`](.github/workflows/lint-and-syntax.yml) | CI: PHP syntax lint + Node.js audit |
-| [`.github/workflows/core-testing.yml`](.github/workflows/core-testing.yml) | CI: Python linting + conditional Node.js install/audit when `package.json` is present |
+## Initial scope
 
----
+This scaffold establishes module boundaries for:
 
-## Using This Template
+- input mode modeling (`standard`, `helper`, `full-keyboard`)
+- language profile contracts and release-one profile data
+- adapter contracts for native input, controlled React input, and WordPad
+- isolated Keyman adapter interface and no-op fallback behavior
 
-1. Click **"Use this template"** on GitHub to create a new repository under the Starisian Technologies organization.
-2. Copy the appropriate license header from [`LICENSE_HEADER.md`](./LICENSE_HEADER.md) into every source file.
-3. The `.github/CODEOWNERS` file automatically assigns `@StarisianDevelopment` as a required reviewer for all pull requests.
-4. The included GitHub Actions workflows will run on every push and pull request.
-
----
-
-## License
-
-All files in this repository — including the license text itself — are the exclusive property of **Starisian Technologies**.  
-See [`LICENSE.md`](./LICENSE.md) for full terms.
-
-**This software is NOT open source.** Viewing this repository on GitHub does not grant any rights beyond those explicitly stated in `LICENSE.md` and the [GitHub Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).
-
----
-
-*© 2026 Starisian Technologies (Max Barrett). All Rights Reserved. Patent Pending.*
+See `/docs/ARCHITECTURE.md` for the initial module map.
