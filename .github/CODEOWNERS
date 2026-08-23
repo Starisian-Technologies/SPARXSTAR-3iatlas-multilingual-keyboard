@@ -1,0 +1,17 @@
+# Starisian Technologies Code Ownership
+# This ensures @MaximillianGroup is automatically assigned to all changes.
+#
+# Patent co-ownership note:
+#   @MaximillianGroup — named inventor on ALL pending patent applications.
+#   @Obafa            — named co-inventor on SELECT pending patent applications.
+# Both are required reviewers on patent-sensitive paths.
+
+# Default owner for everything in the repo
+* @MaximillianGroup
+
+# Explicit owners for sensitive assets
+# Patent-sensitive paths require both patent holders as reviewers
+/datasets/    @MaximillianGroup @Obafa
+/scripts/     @MaximillianGroup @Obafa
+/marketing/   @MaximillianGroup
+/LICENSE.md   @MaximillianGroup
