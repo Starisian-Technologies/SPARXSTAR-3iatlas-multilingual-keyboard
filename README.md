@@ -36,11 +36,36 @@ pnpm test
 The authored implementation belongs in `src/`; generated browser assets belong in
 `assets/`. Do not commit npm or Yarn lockfiles.
 
+## TypeScript module surface
+
+All authored TypeScript lives under `src/ts/` and is re-exported by name from
+`src/ts/index.ts`. Unit tests mirror that layout under `tests/ts/`.
+
+| Module | Responsibility |
+| --- | --- |
+| `core.ts` | Input types plus pure selection, insertion, and normalization helpers |
+| `profiles.ts` | Release-one `LanguageProfile` data |
+| `adapters.ts` | Editor adapters that map host surfaces onto the insertion helper |
+| `keyman.ts` | Keyman engine lifecycle contract and its inert default adapter |
+| `input-mode.ts` | Input-mode state contract and localized mode options |
+
+## Release-one language profiles
+
+| Profile | BCP 47 tag | Autonym |
+| --- | --- | --- |
+| Mandinka | `mnk-Latn-GM` | Mandinka |
+| Wolof | `wo-Latn-SN` | Wolof |
+| Fula | `ff-Latn-SN` | Fulfulde |
+
+Profiles are immutable data. A profile that declares no helper character groups, or
+any group without characters, is rejected in full rather than partially loaded.
+
 ## Current status
 
-The product implementation has intentionally not been invented in this setup change.
-Feature work must follow the staged milestones and unresolved decisions in the
-technical specification.
+The scaffold now carries the data model, insertion behavior, and release-one profiles
+described above. The rendered keyboard UI, the layout JSON schema, and the concrete
+Keyman engine binding remain unresolved decisions in the technical specification and
+must be approved before implementation.
 
 ## License and security
 

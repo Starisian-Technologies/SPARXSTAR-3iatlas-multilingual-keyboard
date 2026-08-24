@@ -26,6 +26,138 @@
       "type": "constant",
       "owner": "Starisian Technologies",
       "path": "src/ts/index.ts"
+    },
+    {
+      "symbol": "InputMode",
+      "type": "type",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "ProfileCharacterGroup",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "LanguageProfile",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "TextSelectionState",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "InsertResult",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "validateLanguageProfile",
+      "type": "function",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "normalizeInputText",
+      "type": "function",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "insertAtSelection",
+      "type": "function",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/core.ts"
+    },
+    {
+      "symbol": "MANDINKA_PROFILE",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/profiles.ts"
+    },
+    {
+      "symbol": "WOLOF_PROFILE",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/profiles.ts"
+    },
+    {
+      "symbol": "FULA_PROFILE",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/profiles.ts"
+    },
+    {
+      "symbol": "RELEASE_ONE_PROFILES",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/profiles.ts"
+    },
+    {
+      "symbol": "EditorAdapter",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/adapters.ts"
+    },
+    {
+      "symbol": "NativeTextareaAdapter",
+      "type": "class",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/adapters.ts"
+    },
+    {
+      "symbol": "ControlledReactInputAdapter",
+      "type": "class",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/adapters.ts"
+    },
+    {
+      "symbol": "WordPadEditorAdapter",
+      "type": "class",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/adapters.ts"
+    },
+    {
+      "symbol": "KeymanAdapter",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/keyman.ts"
+    },
+    {
+      "symbol": "NoopKeymanAdapter",
+      "type": "class",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/keyman.ts"
+    },
+    {
+      "symbol": "MultilingualInputState",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/input-mode.ts"
+    },
+    {
+      "symbol": "MultilingualInputProviderProps",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/input-mode.ts"
+    },
+    {
+      "symbol": "InputModeOption",
+      "type": "interface",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/input-mode.ts"
+    },
+    {
+      "symbol": "getInputModeOptions",
+      "type": "function",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/input-mode.ts"
     }
   ]
 }
