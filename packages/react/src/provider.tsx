@@ -64,6 +64,13 @@ export const MultilingualInputProvider = ({
 		[profiles, activeProfileId]
 	);
 
+	const emitEvent = useCallback(
+		(event: MultilingualInputEvent) => {
+			onEvent?.(event);
+		},
+		[onEvent]
+	);
+
 	const setInputMode = useCallback(
 		(mode: InputMode) => {
 			setInputModeState(mode);
@@ -112,6 +119,7 @@ export const MultilingualInputProvider = ({
 			setInputMode,
 			setActiveProfileId,
 			insertCharacter,
+			emitEvent,
 		}),
 		[
 			profiles,
@@ -121,6 +129,7 @@ export const MultilingualInputProvider = ({
 			setInputMode,
 			setActiveProfileId,
 			insertCharacter,
+			emitEvent,
 		]
 	);
 

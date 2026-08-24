@@ -144,41 +144,77 @@ export const validateLanguageProfile = (
 ): ProfileValidationResult => {
 	const issues: ProfileValidationIssue[] = [];
 
-	const require = (
-		condition: boolean,
-		field: string,
-		message: string
-	): void => {
+	const check = (condition: boolean, field: string, message: string): void => {
 		if (!condition) {
 			issues.push({ field, message });
 		}
 	};
 
-	require(profile.id !== '', 'id', 'Profile identifier must not be empty.');
-	require(profile.bcp47Tag !==
-		'', 'bcp47Tag', 'A BCP 47 language tag is required.');
-	require(profile.writingSystem !==
-		'', 'writingSystem', 'Writing system must be declared.');
-	require(profile.helperCharacterGroups.length >
-		0, 'helperCharacterGroups', 'At least one helper character group is required.');
-	require(profile.helperCharacterGroups.every(
-		(group) => group.characters.length > 0
-	), 'helperCharacterGroups', 'Every helper character group must contain characters.');
-	require(profile.provenance.source !==
-		'', 'provenance.source', 'Orthographic source must be cited.');
-	require(profile.provenance.licence !==
-		'', 'provenance.licence', 'Inventory licence must be recorded.');
+	const required = (value: string, field: string, message: string): void => {
+		check(value !== '', field, message);
+	};
+
+	required(profile.id, 'id', 'Profile identifier must not be empty.');
+	required(profile.bcp47Tag, 'bcp47Tag', 'A BCP 47 language tag is required.');
+	required(
+		profile.writingSystem,
+		'writingSystem',
+		'Writing system must be declared.'
+	);
+
+	check(
+		profile.helperCharacterGroups.length > 0,
+		'helperCharacterGroups',
+		'At least one helper character group is required.'
+	);
+	check(
+		profile.helperCharacterGroups.every((group) => group.characters.length > 0),
+		'helperCharacterGroups',
+		'Every helper character group must contain characters.'
+	);
+
+	// Section 5.5 requires provenance, licence, and a documented variant scope.
+	required(
+		profile.provenance.source,
+		'provenance.source',
+		'Orthographic source must be cited.'
+	);
+	required(
+		profile.provenance.licence,
+		'provenance.licence',
+		'Inventory licence must be recorded.'
+	);
+	required(
+		profile.provenance.variantScope,
+		'provenance.variantScope',
+		'Variant or dialect scope must be documented.'
+	);
 
 	// An approved profile must carry the evidence of its approval. This is the
 	// rule that stops an unreviewed inventory from being marked supported.
+	// Each field is checked for a non-empty value, not merely a non-null one, so
+	// that an empty string cannot stand in for a reviewer name or a date.
 	if (profile.approval.status === 'approved') {
-		require(profile.approval.reviewer !== null &&
-			profile.approval.reviewer !==
-				'', 'approval.reviewer', 'An approved profile must name its linguistic reviewer.');
-		require(profile.approval.approvedAt !==
-			null, 'approval.approvedAt', 'An approved profile must record its approval date.');
-		require(profile.fixtures.length >
-			0, 'fixtures', 'An approved profile must ship code-point fixtures.');
+		required(
+			profile.approval.reviewer ?? '',
+			'approval.reviewer',
+			'An approved profile must name its linguistic reviewer.'
+		);
+		required(
+			profile.approval.approvedAt ?? '',
+			'approval.approvedAt',
+			'An approved profile must record its approval date.'
+		);
+		required(
+			profile.approval.revision,
+			'approval.revision',
+			'An approved profile must record its revision.'
+		);
+		check(
+			profile.fixtures.length > 0,
+			'fixtures',
+			'An approved profile must ship code-point fixtures.'
+		);
 	}
 
 	return { valid: issues.length === 0, issues };
