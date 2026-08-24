@@ -1,0 +1,18 @@
+# Composer dependencies and caches.
+/vendor/
+/.cache/
+
+# Node dependencies and generated assets.
+/node_modules/
+/assets/*.js
+/assets/*.css
+/assets/*.map
+/assets/*.asset.php
+!/assets/.gitkeep
+
+# Local environment and editor artifacts.
+.env
+.env.*
+!.env.example
+.DS_Store
+*.swp

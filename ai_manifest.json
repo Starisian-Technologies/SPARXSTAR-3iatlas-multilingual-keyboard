@@ -1,0 +1,31 @@
+{
+  "repository": "SPARXSTAR-3iatlas-multilingual-keyboard",
+  "version": "0.1.0",
+  "namespace": "Starisian\\Sparxstar\\Atlas",
+  "symbols": [
+    {
+      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata",
+      "type": "class",
+      "owner": "Starisian Technologies",
+      "path": "src/PluginMetadata.php"
+    },
+    {
+      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata::VERSION",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/PluginMetadata.php"
+    },
+    {
+      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata::TEXT_DOMAIN",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/PluginMetadata.php"
+    },
+    {
+      "symbol": "BUILD_VERSION",
+      "type": "constant",
+      "owner": "Starisian Technologies",
+      "path": "src/ts/index.ts"
+    }
+  ]
+}
