@@ -176,3 +176,35 @@ describe('ContentEditableAdapter', () => {
 		).toBeNull();
 	});
 });
+
+describe('ContentEditableAdapter selection ownership', () => {
+	test('refuses to edit when the caret is in a different element', () => {
+		document.body.innerHTML =
+			'<div id="mine" contenteditable>mine</div>' +
+			'<div id="other" contenteditable>other</div>';
+
+		const mine = document.getElementById('mine') as HTMLDivElement;
+		const other = document.getElementById('other') as HTMLDivElement;
+
+		// Put the caret inside the OTHER element.
+		const range = document.createRange();
+
+		range.setStart(other.firstChild as Text, 2);
+		range.setEnd(other.firstChild as Text, 2);
+
+		const selection = window.getSelection();
+
+		selection?.removeAllRanges();
+		selection?.addRange(range);
+
+		const adapter = new ContentEditableAdapter(mine);
+
+		// Must not report success, and must not touch either element.
+		expect(adapter.readSelection()).toBeNull();
+		expect(
+			adapter.insert({ text: 'ŋ', profileId: 'mandinka-latn-gm' })
+		).toBeNull();
+		expect(mine.textContent).toBe('mine');
+		expect(other.textContent).toBe('other');
+	});
+});

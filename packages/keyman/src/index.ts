@@ -14,6 +14,7 @@
  */
 
 import type { LanguageProfile } from '@starisian/3iatlas-multilingual-input-core';
+import { validateLanguageProfile } from '@starisian/3iatlas-multilingual-input-core';
 
 /** Why the full keyboard could not be activated. */
 export type KeymanFailureReason =
@@ -102,19 +103,34 @@ export class NullKeymanAdapter implements KeymanAdapter {
 export const checkKeymanEligibility = (
 	profile: LanguageProfile
 ): KeymanFailureReason | null => {
+	// Profiles are consumer-supplied and therefore untrusted input (section
+	// 10), so blank strings are treated as missing rather than as values.
+	const present = (value: string | null | undefined): boolean =>
+		typeof value === 'string' && value.trim() !== '';
+
 	if (profile.availability.status !== 'available') {
 		return 'keyboard-unavailable';
 	}
 
+	// Specific reasons first: they tell the host exactly what is missing.
 	if (
-		profile.availability.keymanKeyboardId === null ||
-		profile.availability.pinnedVersion === null
+		!present(profile.availability.keymanKeyboardId) ||
+		!present(profile.availability.pinnedVersion)
 	) {
 		return 'no-approved-keyboard';
 	}
 
-	if (profile.availability.metadata === null) {
+	if (
+		!present(profile.availability.metadata?.licence) ||
+		!present(profile.availability.metadata?.source)
+	) {
 		return 'licence-not-recorded';
+	}
+
+	// Catch-all: the same evidence rules that govern availability apply here,
+	// so a structurally invalid profile never reaches the engine.
+	if (!validateLanguageProfile(profile).valid) {
+		return 'keyboard-unavailable';
 	}
 
 	return null;

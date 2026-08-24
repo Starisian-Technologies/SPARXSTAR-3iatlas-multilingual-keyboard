@@ -415,14 +415,14 @@ beyond it.
 
 ### Resolved for Release 1
 
-| Decision                                            | Resolution                                                                                                                                                       |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| npm scope and package names                         | `@starisian/3iatlas-multilingual-input`, with `-core`, `-adapters`, `-keyman`, `-profiles`, `-react` siblings.                                                   |
-| Canonical Mandinka orthography                      | Gambian Mandinka, Peace Corps The Gambia orthography, as adopted by AiWA. Reviewer: Muhammed Dibbasey.                                                           |
-| Whether availability requires linguistic validation | No. The two are independent states. A licensed, pinned, tested keyboard may be used while AiWA review is outstanding; it may not be described as AiWA-validated. |
-| Whether Wolof and Fula block Release 1 engineering  | No. Both are available for engineering and product work while unreviewed, and neither may be presented as AiWA-validated.                                        |
-| Keyman asset distribution                           | Self-hosted only. Third-party CDN loading is refused at runtime by `KeymanWebAdapter.initialize`.                                                                |
-| Engine bundling                                     | The engine is not vendored in this repository. It is self-hosted per deployment, with its licence recorded in the profile before it ships.                       |
+| Decision                                            | Resolution                                                                                                                                                                                                                                    |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| npm scope and package names                         | `@starisian/3iatlas-multilingual-input`, with `-core`, `-adapters`, `-keyman`, `-profiles`, `-react` siblings.                                                                                                                                |
+| Canonical Mandinka orthography                      | Gambian Mandinka in the Peace Corps The Gambia orthography is the chosen **target** for Release 1. AiWA has adopted that orthography as the target; it has **not** validated the shipped inventory. Review is pending with Muhammed Dibbasey. |
+| Whether availability requires linguistic validation | No. The two are independent states. A licensed, pinned, tested keyboard may be used while AiWA review is outstanding; it may not be described as AiWA-validated.                                                                              |
+| Whether Wolof and Fula block Release 1 engineering  | No. Both are available for engineering and product work while unreviewed, and neither may be presented as AiWA-validated.                                                                                                                     |
+| Keyman asset distribution                           | Self-hosted only. Third-party CDN loading is refused at runtime by `KeymanWebAdapter.initialize`.                                                                                                                                             |
+| Engine bundling                                     | The engine is not vendored in this repository. It is self-hosted per deployment, with its licence recorded in the profile before it ships.                                                                                                    |
 
 ### Deferred beyond Release 1
 

@@ -229,6 +229,8 @@ export interface ContentEditableHost {
 	readonly ownerDocument: Document | null;
 	focus: () => void;
 	readonly textContent: string | null;
+	/** Used to prove a selection actually lies inside this host. */
+	contains: (other: Node | null) => boolean;
 }
 
 /**
@@ -248,16 +250,42 @@ export class ContentEditableAdapter implements EditorAdapter {
 		this.host = host;
 	}
 
-	public readonly readSelection = (): TextSelectionState | null => {
-		const doc = this.host.ownerDocument;
-		const selection = doc?.getSelection?.();
+	/**
+	 * Returns the current range only when it lies inside this host.
+	 *
+	 * The Selection API is document-global. Without this check the adapter
+	 * would happily edit whatever element happens to be focused — another
+	 * contenteditable, or an unrelated part of the page — and report success.
+	 *
+	 * @return The range when it belongs to this host, otherwise null.
+	 */
+	private ownRange(): Range | null {
+		const selection = this.host.ownerDocument?.getSelection?.();
 
 		if (!selection || selection.rangeCount === 0) {
 			return null;
 		}
 
-		const value = this.host.textContent ?? '';
 		const range = selection.getRangeAt(0);
+
+		if (
+			!this.host.contains(range.startContainer) ||
+			!this.host.contains(range.endContainer)
+		) {
+			return null;
+		}
+
+		return range;
+	}
+
+	public readonly readSelection = (): TextSelectionState | null => {
+		const range = this.ownRange();
+
+		if (range === null) {
+			return null;
+		}
+
+		const value = this.host.textContent ?? '';
 
 		// Offsets are within the anchor text node; for the single-text-node
 		// case this matches the element's text content.
@@ -270,8 +298,10 @@ export class ContentEditableAdapter implements EditorAdapter {
 	public readonly insert = (request: InsertionRequest): InsertResult | null => {
 		const doc = this.host.ownerDocument;
 		const selection = doc?.getSelection?.();
+		// Refuse to edit when the caret is not inside this host.
+		const range = this.ownRange();
 
-		if (!doc || !selection || selection.rangeCount === 0) {
+		if (!doc || !selection || range === null) {
 			return null;
 		}
 
@@ -280,8 +310,6 @@ export class ContentEditableAdapter implements EditorAdapter {
 		this.restoreFocus();
 
 		try {
-			const range = selection.getRangeAt(0);
-
 			range.deleteContents();
 
 			const node = doc.createTextNode(request.text);

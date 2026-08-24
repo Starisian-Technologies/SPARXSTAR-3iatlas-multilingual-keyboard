@@ -247,3 +247,41 @@ describe('NullKeymanAdapter fallback', () => {
 		await expect(adapter.teardown()).resolves.toBeUndefined();
 	});
 });
+
+describe('eligibility treats blank evidence as missing', () => {
+	test('rejects an empty pinned version', () => {
+		expect(checkKeymanEligibility(withKeyboard({ pinnedVersion: '   ' }))).toBe(
+			'no-approved-keyboard'
+		);
+	});
+
+	test('rejects an empty keyboard id', () => {
+		expect(checkKeymanEligibility(withKeyboard({ keymanKeyboardId: '' }))).toBe(
+			'no-approved-keyboard'
+		);
+	});
+
+	test('rejects a blank licence or source', () => {
+		expect(
+			checkKeymanEligibility(
+				withKeyboard({
+					metadata: { source: 'keyman.com', licence: '' },
+				})
+			)
+		).toBe('licence-not-recorded');
+		expect(
+			checkKeymanEligibility(
+				withKeyboard({ metadata: { source: '', licence: 'MIT' } })
+			)
+		).toBe('licence-not-recorded');
+	});
+
+	test('rejects a structurally invalid profile', () => {
+		const invalid = {
+			...withKeyboard(),
+			helperCharacterGroups: [],
+		};
+
+		expect(checkKeymanEligibility(invalid)).toBe('keyboard-unavailable');
+	});
+});
