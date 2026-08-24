@@ -73,7 +73,12 @@ export class NativeTextControlAdapter implements EditorAdapter {
 		if (this.tryExecCommand(request.text)) {
 			this.fallbackUsed = false;
 
-			return this.readSelection();
+			// The insertion happened. Prefer the control's own post-insertion
+			// state, but fall back to the computed result rather than
+			// returning null: null is this contract's signal that nothing was
+			// inserted, and reporting it here would be a lie that makes the
+			// caller retry or show a failure.
+			return this.readSelection() ?? insertAtSelection(state, request.text);
 		}
 
 		this.fallbackUsed = true;
