@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@wordpress/i18n": "^6.26.0",
     "@wordpress/prettier-config": "^4.34.0",
     "@wordpress/scripts": "^34.1.0",
     "jest": "^29.7.0",

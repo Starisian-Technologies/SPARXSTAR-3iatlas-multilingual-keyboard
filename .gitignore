@@ -4,11 +4,15 @@
 
 # Node dependencies and generated assets.
 /node_modules/
+/.pnpm-store/
 /assets/*.js
 /assets/*.css
 /assets/*.map
 /assets/*.asset.php
 !/assets/.gitkeep
+
+# Test and coverage output.
+/coverage/
 
 # Local environment and editor artifacts.
 .env
