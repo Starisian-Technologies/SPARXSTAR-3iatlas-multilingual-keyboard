@@ -172,12 +172,21 @@ export const validateLanguageProfile = (
 	// An approved profile must carry the evidence of its approval. This is the
 	// rule that stops an unreviewed inventory from being marked supported.
 	if (profile.approval.status === 'approved') {
-		require(profile.approval.reviewer !== null &&
-			profile.approval.reviewer !==
-				'', 'approval.reviewer', 'An approved profile must name its linguistic reviewer.');
-		require(profile.approval.approvedAt !==
-			null, 'approval.approvedAt', 'An approved profile must record its approval date.');
-		require(profile.fixtures.length >
+		require(
+			profile.approval.reviewer !== null && profile.approval.reviewer !== '',
+			'approval.reviewer',
+			'An approved profile must name its linguistic reviewer.'
+		);
+		require(
+			profile.approval.approvedAt !== null && profile.approval.approvedAt !== '',
+			'approval.approvedAt',
+			'An approved profile must record its approval date.'
+		);
+		require(
+			profile.fixtures.length > 0,
+			'fixtures',
+			'An approved profile must ship code-point fixtures.'
+		);
 			0, 'fixtures', 'An approved profile must ship code-point fixtures.');
 	}
 
