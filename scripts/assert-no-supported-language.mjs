@@ -8,21 +8,37 @@
  * this script's expectation consciously rather than by accident.
  */
 
-import { readFileSync } from 'node:fs';
+let draftProfiles;
 
-const source = readFileSync(
-	new URL('../packages/profiles/src/index.ts', import.meta.url),
-	'utf8'
-);
+try {
+	({ DRAFT_PROFILES: draftProfiles } = await import(
+		new URL('../packages/profiles/dist/index.js', import.meta.url).href
+	));
+} catch (error) {
+	console.error(
+		'Refusing to build: profiles package has not been built (expected packages/profiles/dist/index.js). ' +
+			'Run `pnpm run build` before this guard.\n' +
+			String(error)
+	);
+	process.exit(1);
+}
 
-const approvedCount = (source.match(/status: 'approved'/g) ?? []).length;
+if (!Array.isArray(draftProfiles)) {
+	console.error(
+		'Refusing to build: DRAFT_PROFILES did not export an array from packages/profiles.'
+	);
+	process.exit(1);
+}
+
+const approvedCount = draftProfiles.filter(
+	(profile) => profile?.approval?.status === 'approved'
+).length;
 
 if (approvedCount > 0) {
 	console.error(
 		`Refusing to build: ${approvedCount} profile(s) claim approved status.\n` +
 			'A profile may only be marked approved together with its reviewer, ' +
-			'approval date, and code-point fixtures (see docs/PROFILE-REVIEW.md), ' +
-			'and this guard must then be updated deliberately.'
+			'approval date, and code-point fixtures (see docs/PROFILE-REVIEW.md).'
 	);
 	process.exit(1);
 }
