@@ -1,50 +1,50 @@
-# Starisian Technologies Proprietary License
+# SPARXSTAR 3iAtlas Multilingual Keyboard
 
-> **Template Repository** — Use this as the canonical source for all Starisian Technologies license language, file headers, and governance documents.
+SPARXSTAR 3iAtlas is a WordPress 6.9+ multilingual virtual-keyboard plugin. This
+repository currently contains the governed project scaffold: the product contract,
+engineering instructions, dependency manifests, static-analysis configuration, and
+continuous-integration checks needed before feature implementation begins.
 
----
+## Start here
 
-## Overview
+1. Read [`AGENTS.md`](AGENTS.md) for mandatory coding standards.
+2. Read [`INSTRUCTIONS.md`](INSTRUCTIONS.md) for the repository workflow.
+3. Read [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) for scope, architecture, security,
+   accessibility, and acceptance criteria.
+4. Review [`ai_manifest.json`](ai_manifest.json) before adding or renaming symbols.
 
-This repository contains the official **Starisian Technologies Proprietary License** language, code ownership policies, and CI workflow templates. It is intended to be used as a **GitHub Template Repository** so that all new Starisian Technologies projects inherit consistent licensing, security, and governance scaffolding from day one.
+## Prerequisites
 
-**Lead Developer / IP Owner:** Max Barrett ([@StarisianDevelopment](https://github.com/starisiandevelopment))  
-**Organization:** [Starisian Technologies](https://github.com/Starisian-Technologies) / Max Barrett  
-**Jurisdiction:** Los Angeles, California
+- PHP 8.2 or 8.3 and Composer 2
+- Node.js 20 and pnpm 9
+- WordPress 6.9 or the immediately preceding supported minor release
+- Ubuntu 24.04 in CI
 
----
+## Setup and validation
 
-## Repository Contents
+```bash
+composer install --prefer-dist --no-interaction --no-progress
+composer run lint
+composer run analyse
+composer run test:unit
+pnpm install --frozen-lockfile
+pnpm run lint:js
+pnpm run build
+pnpm test
+```
 
-| File / Path | Purpose |
-|---|---|
-| [`LICENSE.md`](./LICENSE.md) | Full proprietary license (public & private/commercial variants) |
-| [`LICENSE_HEADER.md`](./LICENSE_HEADER.md) | Copy-paste license headers for source files (full & short) |
-| [`CODE_OWNERSHIP.md`](./CODE_OWNERSHIP.md) | Technical governance and code ownership policy |
-| [`.github/CODEOWNERS`](.github/CODEOWNERS) | GitHub CODEOWNERS file — auto-assigns @MaximillianGroup to all reviews |
-| [`SECURITY.md`](./SECURITY.md) | Vulnerability reporting policy |
-| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Contribution and CLA policy |
-| [`.github/workflows/lint-and-syntax.yml`](.github/workflows/lint-and-syntax.yml) | CI: PHP syntax lint + Node.js audit |
-| [`.github/workflows/core-testing.yml`](.github/workflows/core-testing.yml) | CI: Python linting + conditional Node.js install/audit when `package.json` is present |
+The authored implementation belongs in `src/`; generated browser assets belong in
+`assets/`. Do not commit npm or Yarn lockfiles.
 
----
+## Current status
 
-## Using This Template
+The product implementation has intentionally not been invented in this setup change.
+Feature work must follow the staged milestones and unresolved decisions in the
+technical specification.
 
-1. Click **"Use this template"** on GitHub to create a new repository under the Starisian Technologies organization.
-2. Copy the appropriate license header from [`LICENSE_HEADER.md`](./LICENSE_HEADER.md) into every source file.
-3. The `.github/CODEOWNERS` file automatically assigns `@StarisianDevelopment` as a required reviewer for all pull requests.
-4. The included GitHub Actions workflows will run on every push and pull request.
+## License and security
 
----
+This is proprietary software. See [`LICENSE.md`](LICENSE.md) and report security
+issues according to [`SECURITY.md`](SECURITY.md).
 
-## License
-
-All files in this repository — including the license text itself — are the exclusive property of **Starisian Technologies**.  
-See [`LICENSE.md`](./LICENSE.md) for full terms.
-
-**This software is NOT open source.** Viewing this repository on GitHub does not grant any rights beyond those explicitly stated in `LICENSE.md` and the [GitHub Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).
-
----
-
-*© 2026 Starisian Technologies (Max Barrett). All Rights Reserved. Patent Pending.*
+*© 2026 Starisian Technologies. All rights reserved. Patent pending.*

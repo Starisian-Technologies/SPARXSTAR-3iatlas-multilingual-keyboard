@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PHPUnit configuration for tests that mirror the src directory. -->
+<phpunit bootstrap="vendor/autoload.php" cacheDirectory=".cache/phpunit" colors="true">
+    <testsuites>
+        <testsuite name="unit">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

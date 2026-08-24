@@ -1,0 +1,26 @@
+{
+  "name": "sparxstar-3iatlas-multilingual-keyboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tooling scaffold for the 3iAtlas multilingual keyboard.",
+  "scripts": {
+    "build": "wp-scripts build src/ts/index.ts --output-path=assets",
+    "format": "wp-scripts format",
+    "lint:js": "wp-scripts lint-js",
+    "start": "wp-scripts start",
+    "test": "wp-scripts test-unit-js --passWithNoTests"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@wordpress/prettier-config": "^4.34.0",
+    "@wordpress/scripts": "^34.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": "20.x",
+    "pnpm": ">=9 <10"
+  },
+  "packageManager": "pnpm@9.15.9"
+}
