@@ -47,11 +47,9 @@ export const InputModeSelector = ({
 	return (
 		<fieldset className="tiatlas-input-mode-selector">
 			<legend>{legend}</legend>
-			{visibleModes.map((mode) => (
-				<label key={mode} className="tiatlas-input-mode-selector__option">
 					<input
 						type="radio"
-						name="tiatlas-input-mode"
+						name={`tiatlas-input-mode-${legend}`}
 						value={mode}
 						checked={inputMode === mode}
 						onChange={() => setInputMode(mode)}
