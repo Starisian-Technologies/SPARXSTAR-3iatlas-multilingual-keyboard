@@ -13,10 +13,10 @@
 
 This repository contains methodologies subject to pending patent applications.
 
-| Inventor | GitHub Handle | Patent Coverage |
-|---|---|---|
-| Max Barrett | [@MaximillianGroup](https://github.com/MaximillianGroup) | All pending patent applications |
-| Obafa | [@Obafa](https://github.com/Obafa) | Select pending patent applications (co-inventor) |
+| Inventor    | GitHub Handle                                            | Patent Coverage                                  |
+| ----------- | -------------------------------------------------------- | ------------------------------------------------ |
+| Max Barrett | [@MaximillianGroup](https://github.com/MaximillianGroup) | All pending patent applications                  |
+| Obafa       | [@Obafa](https://github.com/Obafa)                       | Select pending patent applications (co-inventor) |
 
 Both named inventors are required reviewers for all pull requests touching patent-sensitive paths (`/datasets/`, `/scripts/`). Any modification to these assets without approval of all applicable patent holders is prohibited.
 
@@ -43,4 +43,4 @@ For inquiries regarding Starisian Technologies or the MaximillianGroup dataset i
 
 ---
 
-*Generated for Starisian Technologies — 2026*
+_Generated for Starisian Technologies — 2026_

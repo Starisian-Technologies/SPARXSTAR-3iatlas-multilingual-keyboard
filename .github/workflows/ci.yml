@@ -1,4 +1,4 @@
-# Validates the governed PHP and TypeScript scaffold in the required order.
+# Validates the standalone TypeScript client package.
 name: CI
 
 on:
@@ -11,29 +11,9 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ['8.2', '8.3']
     steps:
       - name: Check out source
         uses: actions/checkout@v4
-      - name: Configure PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:v2
-          coverage: none
-      - name: Validate Composer metadata
-        run: composer validate --strict
-      - name: Install PHP dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
-      - name: Lint PHP
-        run: composer run lint
-      - name: Analyse PHP
-        run: composer run analyse
-      - name: Test PHP
-        run: composer run test:unit
       - name: Configure pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -43,11 +23,17 @@ jobs:
         with:
           node-version: '20'
           cache: pnpm
-      - name: Install Node dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint TypeScript
-        run: pnpm run lint:js
-      - name: Build assets
-        run: pnpm run build
-      - name: Test TypeScript
+      - name: Lint
+        run: pnpm run lint
+      - name: Check formatting
+        run: pnpm run format
+      - name: Typecheck
+        run: pnpm run typecheck
+      - name: Test
         run: pnpm test
+      - name: Build packages
+        run: pnpm run build
+      - name: Assert no language is claimed as supported
+        run: node scripts/assert-no-supported-language.mjs

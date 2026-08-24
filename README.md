@@ -1,75 +1,91 @@
-# SPARXSTAR 3iAtlas Multilingual Keyboard
+# 3iAtlas Multilingual Input
 
-SPARXSTAR 3iAtlas is a WordPress 6.9+ multilingual virtual-keyboard plugin. This
-repository currently contains the governed project scaffold: the product contract,
-engineering instructions, dependency manifests, static-analysis configuration, and
-continuous-integration checks needed before feature implementation begins.
+`@starisian/3iatlas-multilingual-input` is a standalone, client-side TypeScript
+package for multilingual text input across 3iAtlas products. It runs in
+browsers, including Android and iOS web apps. It is not a WordPress plugin, and
+it contains no PHP, no server, and no database. Node is used only for
+development, testing, building, and publishing.
 
-## Start here
+Read [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) first — it governs this package.
 
-1. Read [`AGENTS.md`](AGENTS.md) for mandatory coding standards.
-2. Read [`INSTRUCTIONS.md`](INSTRUCTIONS.md) for the repository workflow.
-3. Read [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) for scope, architecture, security,
-   accessibility, and acceptance criteria.
-4. Review [`ai_manifest.json`](ai_manifest.json) before adding or renaming symbols.
+## No language is currently supported
 
-## Prerequisites
+Every shipped language profile is **provisional and unapproved**. No reviewer
+has completed linguistic acceptance, so `isSupportedProfile` returns `false` for
+all of them and `selectSupportedProfiles` returns an empty array.
 
-- PHP 8.2 or 8.3 and Composer 2
-- Node.js 20 and pnpm 9
-- WordPress 6.9 or the immediately preceding supported minor release
-- Ubuntu 24.04 in CI
+Do not present any language in this package as supported.
+[`docs/PROFILE-REVIEW.md`](docs/PROFILE-REVIEW.md) records what each profile is
+missing, including a substantive concern about the Mandinka inventory.
 
-## Setup and validation
+## Packages
 
-```bash
-composer install --prefer-dist --no-interaction --no-progress
-composer run lint
-composer run analyse
-composer run test:unit
-pnpm install --frozen-lockfile
-pnpm run lint:js
-pnpm run build
-pnpm test
+| Package                                 | Purpose                                                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `…-core`                                | Framework-agnostic types, text primitives, profile schema, preferences, capability detection. No dependencies.           |
+| `…-adapters`                            | Native text control, controlled React input, and WordPad editor adapters.                                                |
+| `…-keyman`                              | Optional KeymanWeb boundary. Ships a null adapter only; the engine is Phase 2.                                           |
+| `…-profiles`                            | Draft (unapproved) language profiles.                                                                                    |
+| `…-react`                               | `MultilingualInputProvider`, `InputModeSelector`, `LanguageHelperBar`, `KeymanKeyboardHost`. React is a peer dependency. |
+| `@starisian/3iatlas-multilingual-input` | Aggregate re-export of core, adapters, keyman, and profiles.                                                             |
+
+Consumers shipping only Helper mode should depend on `core` and `adapters`
+directly so that neither React nor the Keyman surface enters their bundle
+(specification section 9).
+
+The aggregate package intentionally does **not** re-export the React bindings.
+Doing so would force React into every consumer, including non-React products,
+which conflicts with section 9's bundle requirements. Import
+`…-react` explicitly when you need it.
+
+## Usage
+
+```ts
+import {
+	insertAtSelection,
+	isSupportedProfile,
+	selectSupportedProfiles,
+} from '@starisian/3iatlas-multilingual-input-core';
+import { DRAFT_PROFILES } from '@starisian/3iatlas-multilingual-input-profiles';
+
+// Gate any user-facing language list on approval, never on mere presence.
+const offerable = selectSupportedProfiles(DRAFT_PROFILES); // [] today
+
+const result = insertAtSelection(
+	{ value: 'N ka taa', selectionStart: 2, selectionEnd: 4 },
+	'ñ'
+);
+// result.value === 'N ñ taa'; caret collapses at the inserted boundary.
 ```
 
-The authored implementation belongs in `src/`; generated browser assets belong in
-`assets/`. Do not commit npm or Yarn lockfiles.
+## Development
 
-## TypeScript module surface
+Requires Node 20+ and pnpm 9.
 
-All authored TypeScript lives under `src/ts/` and is re-exported by name from
-`src/ts/index.ts`. Unit tests mirror that layout under `tests/ts/`.
+```bash
+pnpm install
+pnpm run validate   # lint, format check, typecheck, test, build
+```
 
-| Module | Responsibility |
-| --- | --- |
-| `core.ts` | Input types plus pure selection, insertion, and normalization helpers |
-| `profiles.ts` | Release-one `LanguageProfile` data |
-| `adapters.ts` | Editor adapters that map host surfaces onto the insertion helper |
-| `keyman.ts` | Keyman engine lifecycle contract and its inert default adapter |
-| `input-mode.ts` | Input-mode state contract and localized mode options |
+Individual steps: `pnpm run lint`, `pnpm run format`, `pnpm run typecheck`,
+`pnpm test`, `pnpm run build`.
 
-## Release-one language profiles
+## Status against the specification
 
-| Profile | BCP 47 tag | Autonym |
-| --- | --- | --- |
-| Mandinka | `mnk-Latn-GM` | Mandinka |
-| Wolof | `wo-Latn-SN` | Wolof |
-| Fula | `ff-Latn-SN` | Fulfulde |
+Implemented: the module and package boundaries (§5), the profile schema and its
+approval governance (§5.5), input-mode contract and defaults (§6.1), helper-bar
+component with its accessibility rules (§6.3), editor adapters (§5.3), the
+Keyman boundary and its mandatory fallback (§5.4), grapheme-safe cursor movement
+and normalization (§7), preference scoping (§6.2), and non-content events (§12).
 
-Profiles are immutable data. A profile that declares no helper character groups, or
-any group without characters, is rejected in full rather than partially loaded.
+Not yet implemented, and not claimed: the KeymanWeb engine itself (Phase 2),
+bundled fonts and their licence review (§8), offline asset caching and published
+size budgets (§9), the physical device matrix (§14.2), IME composition and
+undo/redo verification against a real host editor, and linguistic acceptance for
+every profile (§14.3).
 
-## Current status
+## Licence and security
 
-The scaffold now carries the data model, insertion behavior, and release-one profiles
-described above. The rendered keyboard UI, the layout JSON schema, and the concrete
-Keyman engine binding remain unresolved decisions in the technical specification and
-must be approved before implementation.
+Proprietary. See [`LICENSE.md`](LICENSE.md) and [`SECURITY.md`](SECURITY.md).
 
-## License and security
-
-This is proprietary software. See [`LICENSE.md`](LICENSE.md) and report security
-issues according to [`SECURITY.md`](SECURITY.md).
-
-*© 2026 Starisian Technologies. All rights reserved. Patent pending.*
+_© 2026 Starisian Technologies. All rights reserved. Patent pending._

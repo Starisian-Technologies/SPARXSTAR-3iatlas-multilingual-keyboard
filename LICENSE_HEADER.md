@@ -49,9 +49,7 @@ Use in secondary or supporting files (e.g., utility helpers, config files, templ
 
 ---
 
-
 ## JavaScript / Node.js Header
-
 
 javascript
 
@@ -75,7 +73,6 @@ javascript
 
 ## Python Header
 
-
 python
 
 ```
@@ -96,10 +93,9 @@ python
 
 ## Notes
 
+- `__init__.py` files are exempt --- they may be empty or contain only package declarations.
+- The CI check scans for the string `Copyright (c) Starisian Technologies` as the presence marker.
+- Headers must appear before any other content in the file (including docstrings and imports).
+- For Python files, the header appears before the module docstring.
 
--   `__init__.py` files are exempt --- they may be empty or contain only package declarations.
--   The CI check scans for the string `Copyright (c) Starisian Technologies` as the presence marker.
--   Headers must appear before any other content in the file (including docstrings and imports).
--   For Python files, the header appears before the module docstring.
-
-*© 2026 Starisian Technologies (Max Barrett). All Rights Reserved. Patent Pending.*
+_© 2026 Starisian Technologies (Max Barrett). All Rights Reserved. Patent Pending._

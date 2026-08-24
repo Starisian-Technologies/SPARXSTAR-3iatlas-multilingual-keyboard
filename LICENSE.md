@@ -5,7 +5,8 @@ Copyright © 2026 Starisian Technologies (Max Barrett). All Rights Reserved.
 ---
 
 ## PUBLIC REPOSITORY LICENSE
-*(Applies to this and any other publicly accessible Starisian Technologies repository hosted on GitHub)*
+
+_(Applies to this and any other publicly accessible Starisian Technologies repository hosted on GitHub)_
 
 ### 1. OWNERSHIP AND SCOPE
 
@@ -44,7 +45,8 @@ This agreement shall be governed by the laws of the State of California. Any leg
 ---
 
 ## PRIVATE / COMMERCIAL LICENSE — STARISIAN TECHNOLOGIES PROPRIETARY LICENSE & TERMS
-*(Applies to all private repositories, licensed deployments, and engagements governed by a Starisian Technologies Service Agreement, Commercial License, or Employment Agreement)*
+
+_(Applies to all private repositories, licensed deployments, and engagements governed by a Starisian Technologies Service Agreement, Commercial License, or Employment Agreement)_
 
 © 2023–2026 Starisian Technologies. All Rights Reserved.
 
