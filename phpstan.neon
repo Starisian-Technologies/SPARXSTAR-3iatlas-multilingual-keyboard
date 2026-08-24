@@ -1,8 +1,0 @@
-# PHPStan configuration for future application code and its mirrored tests.
-parameters:
-    level: 4
-    paths:
-        - src
-        - tests
-        - mu-plugins
-    tmpDir: .cache/phpstan

@@ -1,13 +1,27 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "esModuleInterop": true,
-    "outDir": "assets",
-    "noEmit": true,
-    "skipLibCheck": true
-  },
-  "include": ["src/ts/**/*.ts", "tests/**/*.ts"]
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"noEmit": true,
+		"baseUrl": ".",
+		"paths": {
+			"@starisian/3iatlas-multilingual-input": [
+				"packages/multilingual-input/src"
+			],
+			"@starisian/3iatlas-multilingual-input-core": ["packages/core/src"],
+			"@starisian/3iatlas-multilingual-input-adapters": [
+				"packages/adapters/src"
+			],
+			"@starisian/3iatlas-multilingual-input-keyman": ["packages/keyman/src"],
+			"@starisian/3iatlas-multilingual-input-profiles": [
+				"packages/profiles/src"
+			],
+			"@starisian/3iatlas-multilingual-input-react": ["packages/react/src"]
+		}
+	},
+	"include": [
+		"packages/**/*.ts",
+		"packages/**/*.tsx",
+		"tests/**/*.ts",
+		"tests/**/*.tsx"
+	]
 }

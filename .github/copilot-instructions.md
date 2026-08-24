@@ -6,9 +6,9 @@ Treat `AGENTS.md` as mandatory and fail closed when a proposed behavior lacks an
 approved contract. Do not invent product requirements, namespaces, permissions,
 locales, linguistic data, or external services.
 
-Keep authored PHP and TypeScript in `src/`, mirror source paths in `tests/`, and
-write generated output only to `assets/`. Use strict types, named TypeScript exports,
-WordPress APIs, localized user-visible strings, logical CSS properties, bounded
+Keep authored TypeScript in `packages/<name>/src/`, add tests under `tests/`, and
+write build output only to each package `dist/`. Use strict types, named TypeScript exports,
+localized user-visible strings supplied by the consumer, logical CSS properties, bounded
 execution, and accessible native controls. Document every source file and symbol,
 and update `ai_manifest.json` whenever a symbol changes.
 

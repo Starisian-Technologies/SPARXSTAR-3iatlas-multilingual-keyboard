@@ -1,18 +1,13 @@
-# Composer dependencies and caches.
-/vendor/
-/.cache/
+# Dependencies.
+node_modules/
+.pnpm-store/
 
-# Node dependencies and generated assets.
-/node_modules/
-/.pnpm-store/
-/assets/*.js
-/assets/*.css
-/assets/*.map
-/assets/*.asset.php
-!/assets/.gitkeep
+# Build output.
+dist/
+*.tsbuildinfo
 
 # Test and coverage output.
-/coverage/
+coverage/
 
 # Local environment and editor artifacts.
 .env

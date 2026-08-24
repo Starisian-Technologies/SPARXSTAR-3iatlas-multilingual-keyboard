@@ -1,62 +1,58 @@
-# 3iAtlas Multilingual Input — Architecture
+# Architecture
 
-This document describes how the authored TypeScript is organized. It is
-subordinate to [`TECHNICAL_SPEC.md`](../TECHNICAL_SPEC.md) for scope and to
-[`AGENTS.md`](../AGENTS.md) for structure and tooling rules.
+This document describes how the code is organized. It is subordinate to
+[`TECHNICAL_SPEC.md`](../TECHNICAL_SPEC.md).
+
+## Platform
+
+A standalone client-side npm package. TypeScript and JavaScript only: no PHP,
+no Composer, no WordPress plugin loader, no Sirus integration, no database, and
+no Node server. Node is a development, test, build, and publish tool only. The
+shipped artifacts run in the browser.
 
 ## Layout
 
-The repository is a single WordPress plugin, not a publishable package
-workspace. `AGENTS.md` fixes the directory contract:
-
 ```
-src/          authored source (PHP and TypeScript)
-src/ts/       TypeScript source
-assets/       compiled output only
-tests/        mirrors src/ exactly
-docs/         documentation only
-mu-plugins/   WordPress loader entry point only
+packages/core/         framework-agnostic core (no dependencies)
+packages/adapters/     editor adapters
+packages/keyman/       optional KeymanWeb boundary
+packages/profiles/     draft language profiles
+packages/react/        React bindings (React is a peer dependency)
+packages/multilingual-input/  aggregate package
+tests/                 workspace test suite
+docs/                  documentation
 ```
 
-The bundle is built with `@wordpress/scripts` from `src/ts/index.ts` into
-`assets/`. Webpack is not configured independently.
+Each package builds to its own `dist/` with ESM, CJS, and type declarations, and
+is independently versionable per specification section 5.
 
-## Modules
+## Dependency direction
 
-| Module | Responsibility |
-| --- | --- |
-| `src/ts/core.ts` | Input types plus pure selection, insertion, and normalization helpers |
-| `src/ts/profiles.ts` | Release-one `LanguageProfile` data |
-| `src/ts/adapters.ts` | Editor adapters that map host surfaces onto the insertion helper |
-| `src/ts/keyman.ts` | Keyman engine lifecycle contract and its inert default adapter |
-| `src/ts/input-mode.ts` | Input-mode state contract and localized mode options |
+`core` depends on nothing. Every other package depends on `core` and never on a
+sibling, except `react`, which depends on `keyman` for the keyboard host's
+types, and the aggregate, which depends on the leaves.
 
-Every module uses named exports. `src/ts/index.ts` is the single build entry
-point and re-exports the approved surface.
+This keeps section 9's bundle requirements achievable: a consumer shipping only
+Helper mode pulls in `core` and `adapters` and never loads the Keyman engine or
+React.
 
-## Layering
+## Where the rules live in code
 
-`core.ts` is the base layer and depends on nothing. It holds no DOM access, no
-network access, and no retained state, so insertion and validation behavior is
-verifiable in isolation.
+| Specification rule                                  | Enforced by                                                                       |
+| --------------------------------------------------- | --------------------------------------------------------------------------------- |
+| §4 no support claim without review                  | `isSupportedProfile`, `selectSupportedProfiles`                                   |
+| §5.5 profile field set                              | The `LanguageProfile` type                                                        |
+| §5.5 approval evidence                              | `validateLanguageProfile` rejects `approved` without reviewer, date, and fixtures |
+| §5.3 no DOM mutation where a transaction API exists | `WordPadEditorAdapter` delegates to the host API                                  |
+| §5.4 fallback on Keyman failure                     | `checkKeymanEligibility`, `KeymanKeyboardHost`'s failure path                     |
+| §6.1 helper is the default                          | `DEFAULT_INPUT_MODE`                                                              |
+| §6.3 44px touch targets, language context           | `LanguageHelperBar`                                                               |
+| §7 grapheme-safe cursors                            | `toGraphemes`, `previousGraphemeBoundary`, `nextGraphemeBoundary`                 |
+| §10 no typed text in storage or events              | `buildPreferenceKey`, `MultilingualInputEvent`                                    |
 
-`adapters.ts`, `keyman.ts`, `profiles.ts`, and `input-mode.ts` each depend on
-`core.ts` only. Adapters carry the host-surface differences so that inserted
-characters are always applied through the same helper and never interpreted as
-HTML. Cross-component state is owned by `@wordpress/data`; `input-mode.ts`
-describes the shape of that state rather than storing it.
+## Known deviation
 
-## Language profiles
-
-Release one covers Mandinka (`mnk-Latn-GM`), Wolof (`wo-Latn-SN`), and Fula /
-Fulfulde (`ff-Latn-SN`). Each profile declares a stable identifier, a BCP 47
-tag, an autonym, text direction, a Unicode normalization form, and its helper
-character groups. Validation rejects an incomplete profile in full; there is no
-partial fallback.
-
-## Unresolved decisions
-
-The rendered keyboard UI, the layout JSON schema and its first supported locale
-set, and the concrete Keyman engine binding are not settled. Each requires
-approval in the technical specification before implementation, and each new
-symbol requires an `ai_manifest.json` update.
+The aggregate package does not re-export the React bindings, though section 5
+lists React among the modules. Re-exporting them would make React a hard
+dependency of the aggregate and pull it into non-React consumers, contradicting
+section 9. Consumers import `…-react` explicitly instead.

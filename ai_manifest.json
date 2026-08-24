@@ -1,163 +1,484 @@
 {
-  "repository": "SPARXSTAR-3iatlas-multilingual-keyboard",
-  "version": "0.1.0",
-  "namespace": "Starisian\\Sparxstar\\Atlas",
-  "symbols": [
-    {
-      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata",
-      "type": "class",
-      "owner": "Starisian Technologies",
-      "path": "src/PluginMetadata.php"
-    },
-    {
-      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata::VERSION",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/PluginMetadata.php"
-    },
-    {
-      "symbol": "Starisian\\Sparxstar\\Atlas\\PluginMetadata::TEXT_DOMAIN",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/PluginMetadata.php"
-    },
-    {
-      "symbol": "BUILD_VERSION",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/index.ts"
-    },
-    {
-      "symbol": "InputMode",
-      "type": "type",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "ProfileCharacterGroup",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "LanguageProfile",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "TextSelectionState",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "InsertResult",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "validateLanguageProfile",
-      "type": "function",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "normalizeInputText",
-      "type": "function",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "insertAtSelection",
-      "type": "function",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/core.ts"
-    },
-    {
-      "symbol": "MANDINKA_PROFILE",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/profiles.ts"
-    },
-    {
-      "symbol": "WOLOF_PROFILE",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/profiles.ts"
-    },
-    {
-      "symbol": "FULA_PROFILE",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/profiles.ts"
-    },
-    {
-      "symbol": "RELEASE_ONE_PROFILES",
-      "type": "constant",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/profiles.ts"
-    },
-    {
-      "symbol": "EditorAdapter",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/adapters.ts"
-    },
-    {
-      "symbol": "NativeTextareaAdapter",
-      "type": "class",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/adapters.ts"
-    },
-    {
-      "symbol": "ControlledReactInputAdapter",
-      "type": "class",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/adapters.ts"
-    },
-    {
-      "symbol": "WordPadEditorAdapter",
-      "type": "class",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/adapters.ts"
-    },
-    {
-      "symbol": "KeymanAdapter",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/keyman.ts"
-    },
-    {
-      "symbol": "NoopKeymanAdapter",
-      "type": "class",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/keyman.ts"
-    },
-    {
-      "symbol": "MultilingualInputState",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/input-mode.ts"
-    },
-    {
-      "symbol": "MultilingualInputProviderProps",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/input-mode.ts"
-    },
-    {
-      "symbol": "InputModeOption",
-      "type": "interface",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/input-mode.ts"
-    },
-    {
-      "symbol": "getInputModeOptions",
-      "type": "function",
-      "owner": "Starisian Technologies",
-      "path": "src/ts/input-mode.ts"
-    }
-  ]
+	"repository": "SPARXSTAR-3iatlas-multilingual-keyboard",
+	"version": "0.1.0",
+	"namespace": "@starisian/3iatlas-multilingual-input",
+	"platform": "standalone client-side TypeScript npm package",
+	"symbols": [
+		{
+			"symbol": "isEditorAdapter",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/adapter.ts"
+		},
+		{
+			"symbol": "InsertionRequest",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/adapter.ts"
+		},
+		{
+			"symbol": "EditorAdapter",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/adapter.ts"
+		},
+		{
+			"symbol": "detectCapabilities",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/capabilities.ts"
+		},
+		{
+			"symbol": "RuntimeCapabilities",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/capabilities.ts"
+		},
+		{
+			"symbol": "INPUT_MODES",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/input-mode.ts"
+		},
+		{
+			"symbol": "DEFAULT_INPUT_MODE",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/input-mode.ts"
+		},
+		{
+			"symbol": "parseInputMode",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/input-mode.ts"
+		},
+		{
+			"symbol": "InputMode",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/input-mode.ts"
+		},
+		{
+			"symbol": "buildPreferenceKey",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/preferences.ts"
+		},
+		{
+			"symbol": "readInputModePreference",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/preferences.ts"
+		},
+		{
+			"symbol": "writeInputModePreference",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/preferences.ts"
+		},
+		{
+			"symbol": "PreferenceScope",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/preferences.ts"
+		},
+		{
+			"symbol": "PreferenceAdapter",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/preferences.ts"
+		},
+		{
+			"symbol": "validateLanguageProfile",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "isSupportedProfile",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "selectSupportedProfiles",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "TextDirection",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "NormalizationForm",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileApprovalStatus",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileProvenance",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileApproval",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileCharacterGroup",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "CaseRelationship",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "CombiningRule",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileFixture",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileFonts",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileKeymanBinding",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "LanguageProfile",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileValidationIssue",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "ProfileValidationResult",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "toGraphemes",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "normalizeInputText",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "insertAtSelection",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "previousGraphemeBoundary",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "nextGraphemeBoundary",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "toCodePoints",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "TextSelectionState",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "InsertResult",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/text.ts"
+		},
+		{
+			"symbol": "ControlledValueSetter",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "NativeTextControl",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "EditorTransactionApi",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "NativeTextControlAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "ControlledReactInputAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "WordPadEditorAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "checkKeymanEligibility",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "KeymanFailureReason",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "KeymanActivation",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "KeymanAssetSource",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "KeymanAdapter",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "NullKeymanAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/index.ts"
+		},
+		{
+			"symbol": "MANDINKA_DRAFT_PROFILE",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-profiles",
+			"owner": "Starisian Technologies",
+			"path": "packages/profiles/src/index.ts"
+		},
+		{
+			"symbol": "WOLOF_DRAFT_PROFILE",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-profiles",
+			"owner": "Starisian Technologies",
+			"path": "packages/profiles/src/index.ts"
+		},
+		{
+			"symbol": "FULA_DRAFT_PROFILE",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-profiles",
+			"owner": "Starisian Technologies",
+			"path": "packages/profiles/src/index.ts"
+		},
+		{
+			"symbol": "DRAFT_PROFILES",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-profiles",
+			"owner": "Starisian Technologies",
+			"path": "packages/profiles/src/index.ts"
+		},
+		{
+			"symbol": "MultilingualInputContext",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/context.ts"
+		},
+		{
+			"symbol": "useMultilingualInput",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/context.ts"
+		},
+		{
+			"symbol": "MultilingualInputEvent",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/context.ts"
+		},
+		{
+			"symbol": "MultilingualInputContextValue",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/context.ts"
+		},
+		{
+			"symbol": "InputModeSelector",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/input-mode-selector.tsx"
+		},
+		{
+			"symbol": "InputModeLabels",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/input-mode-selector.tsx"
+		},
+		{
+			"symbol": "InputModeSelectorProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/input-mode-selector.tsx"
+		},
+		{
+			"symbol": "KeymanKeyboardHost",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/keyman-keyboard-host.tsx"
+		},
+		{
+			"symbol": "KeymanKeyboardHostProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/keyman-keyboard-host.tsx"
+		},
+		{
+			"symbol": "LanguageHelperBar",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/language-helper-bar.tsx"
+		},
+		{
+			"symbol": "LanguageHelperBarProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/language-helper-bar.tsx"
+		},
+		{
+			"symbol": "MultilingualInputProvider",
+			"type": "constant",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/provider.tsx"
+		},
+		{
+			"symbol": "MultilingualInputProviderProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/provider.tsx"
+		}
+	]
 }
