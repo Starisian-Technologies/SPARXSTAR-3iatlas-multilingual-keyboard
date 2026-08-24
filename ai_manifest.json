@@ -46,7 +46,7 @@
       "path": "packages/adapters/src/index.ts"
     },
     {
-      "symbol": "WordPadAdapter",
+      "symbol": "WordPadEditorAdapter",
       "type": "class",
       "owner": "adapters",
       "path": "packages/adapters/src/index.ts"
@@ -86,6 +86,36 @@
       "type": "const",
       "owner": "react",
       "path": "packages/react/src/index.ts"
+    },
+    {
+      "symbol": "core",
+      "type": "namespace-export",
+      "owner": "multilingual-input",
+      "path": "packages/multilingual-input/src/index.ts"
+    },
+    {
+      "symbol": "react",
+      "type": "namespace-export",
+      "owner": "multilingual-input",
+      "path": "packages/multilingual-input/src/index.ts"
+    },
+    {
+      "symbol": "adapters",
+      "type": "namespace-export",
+      "owner": "multilingual-input",
+      "path": "packages/multilingual-input/src/index.ts"
+    },
+    {
+      "symbol": "keyman",
+      "type": "namespace-export",
+      "owner": "multilingual-input",
+      "path": "packages/multilingual-input/src/index.ts"
+    },
+    {
+      "symbol": "profiles",
+      "type": "namespace-export",
+      "owner": "multilingual-input",
+      "path": "packages/multilingual-input/src/index.ts"
     }
   ]
 }

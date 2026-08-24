@@ -1,7 +1,15 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@starisian/3iatlas-multilingual-input-core": ["packages/core/src"],
+      "@starisian/3iatlas-multilingual-input-react": ["packages/react/src"],
+      "@starisian/3iatlas-multilingual-input-adapters": ["packages/adapters/src"],
+      "@starisian/3iatlas-multilingual-input-keyman": ["packages/keyman/src"],
+      "@starisian/3iatlas-multilingual-input-profiles": ["packages/profiles/src"]
+    }
   },
-  "include": ["packages/**/*.ts", "packages/**/*.tsx", "tests/**/*.ts"]
+  "include": ["packages/**/*.ts", "packages/**/*.tsx", "tests/**/*.ts", "jest.config.ts"]
 }

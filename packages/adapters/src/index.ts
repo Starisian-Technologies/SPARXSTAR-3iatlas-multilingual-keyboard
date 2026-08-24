@@ -5,20 +5,14 @@ export interface EditorAdapter {
   insertCharacter(state: TextSelectionState, character: string): InsertResult;
 }
 
-export class NativeTextareaAdapter implements EditorAdapter {
+class BaseSelectionAdapter implements EditorAdapter {
   public insertCharacter(state: TextSelectionState, character: string): InsertResult {
     return insertAtSelection(state, character);
   }
 }
 
-export class ControlledReactInputAdapter implements EditorAdapter {
-  public insertCharacter(state: TextSelectionState, character: string): InsertResult {
-    return insertAtSelection(state, character);
-  }
-}
+export class NativeTextareaAdapter extends BaseSelectionAdapter {}
 
-export class WordPadAdapter implements EditorAdapter {
-  public insertCharacter(state: TextSelectionState, character: string): InsertResult {
-    return insertAtSelection(state, character);
-  }
-}
+export class ControlledReactInputAdapter extends BaseSelectionAdapter {}
+
+export class WordPadEditorAdapter extends BaseSelectionAdapter {}
