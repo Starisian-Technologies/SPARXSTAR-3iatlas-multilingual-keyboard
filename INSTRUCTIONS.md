@@ -25,7 +25,7 @@ and runtime constraints remain authoritative in [`AGENTS.md`](AGENTS.md).
 - Security, privacy, internationalization, RTL behavior, keyboard access, and screen
   reader announcements have been considered.
 - Node checks run with Node 20 and pnpm; `pnpm run validate` passes end to end.
-- Built files, if any, are reproducible and are written only to `assets/`.
+- Built files, if any, are reproducible and are written only to each package's `dist/`.
 
 ## Review order
 
