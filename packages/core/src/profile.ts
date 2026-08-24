@@ -164,10 +164,21 @@ export const validateLanguageProfile = (
 	require(profile.helperCharacterGroups.every(
 		(group) => group.characters.length > 0
 	), 'helperCharacterGroups', 'Every helper character group must contain characters.');
-	require(profile.provenance.source !==
-		'', 'provenance.source', 'Orthographic source must be cited.');
-	require(profile.provenance.licence !==
-		'', 'provenance.licence', 'Inventory licence must be recorded.');
+	require(
+		profile.provenance.source !== '',
+		'provenance.source',
+		'Orthographic source must be cited.'
+	);
+	require(
+		profile.provenance.licence !== '',
+		'provenance.licence',
+		'Inventory licence must be recorded.'
+	);
+	require(
+		profile.provenance.variantScope !== '',
+		'provenance.variantScope',
+		'Variant/dialect scope must be documented.'
+	);
 
 	// An approved profile must carry the evidence of its approval. This is the
 	// rule that stops an unreviewed inventory from being marked supported.
