@@ -31,9 +31,40 @@ jobs:
         run: pnpm run format
       - name: Typecheck
         run: pnpm run typecheck
-      - name: Test
+      - name: Unit tests
         run: pnpm test
       - name: Build packages
         run: pnpm run build
-      - name: Assert no language is claimed as supported
-        run: node scripts/assert-no-supported-language.mjs
+      - name: Assert no false AiWA validation claim
+        run: node scripts/assert-no-false-validation-claim.mjs
+      - name: Check bundle budgets and Helper-path isolation
+        run: node scripts/check-bundle-budgets.mjs
+      - name: Audit dependencies
+        run: pnpm audit --audit-level high
+
+  browser:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Configure pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Configure Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build packages
+        run: pnpm run build
+      - name: Build example application
+        run: pnpm --filter @starisian/3iatlas-multilingual-input-example run build
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Browser tests (desktop and mobile viewports)
+        run: pnpm run test:browser
+        env:
+          CI: 'true'

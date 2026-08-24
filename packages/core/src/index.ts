@@ -6,24 +6,28 @@
  */
 
 export type {
+	AvailabilityStatus,
 	CaseRelationship,
 	CombiningRule,
+	KeyboardAvailability,
 	LanguageProfile,
+	LinguisticValidation,
 	NormalizationForm,
-	ProfileApproval,
-	ProfileApprovalStatus,
 	ProfileCharacterGroup,
 	ProfileFixture,
 	ProfileFonts,
-	ProfileKeymanBinding,
-	ProfileProvenance,
 	ProfileValidationIssue,
 	ProfileValidationResult,
+	SourceMetadata,
 	TextDirection,
+	ValidationStatus,
 } from './profile';
 export {
-	isSupportedProfile,
-	selectSupportedProfiles,
+	describeValidationStatus,
+	isKeyboardAvailable,
+	isLinguisticallyValidated,
+	selectAvailableProfiles,
+	selectValidatedProfiles,
 	validateLanguageProfile,
 } from './profile';
 

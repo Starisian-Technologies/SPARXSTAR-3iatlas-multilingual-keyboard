@@ -1,0 +1,25 @@
+{
+	"name": "@starisian/3iatlas-multilingual-input-example",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Integration example proving the package against five host surfaces.",
+	"type": "module",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite",
+		"preview": "vite preview --port 4173"
+	},
+	"dependencies": {
+		"@starisian/3iatlas-multilingual-input-adapters": "workspace:*",
+		"@starisian/3iatlas-multilingual-input-core": "workspace:*",
+		"@starisian/3iatlas-multilingual-input-keyman": "workspace:*",
+		"@starisian/3iatlas-multilingual-input-profiles": "workspace:*",
+		"@starisian/3iatlas-multilingual-input-react": "workspace:*",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-react": "^5.2.0",
+		"vite": "^7.3.6"
+	}
+}

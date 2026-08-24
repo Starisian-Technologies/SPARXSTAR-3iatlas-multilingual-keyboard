@@ -223,3 +223,90 @@ export class WordPadEditorAdapter implements EditorAdapter {
 		this.api.focus();
 	};
 }
+
+/** Minimal shape of a contenteditable host element. */
+export interface ContentEditableHost {
+	readonly ownerDocument: Document | null;
+	focus: () => void;
+	readonly textContent: string | null;
+}
+
+/**
+ * Adapter for a `contenteditable` surface.
+ *
+ * Uses the Selection/Range API so the insertion participates in the browser's
+ * native editing pipeline, keeping undo/redo and composition intact. Section
+ * 5.3 forbids replacing the element's markup wholesale, and doing so would
+ * also destroy the caret, so a Range is used rather than assigning innerHTML.
+ */
+export class ContentEditableAdapter implements EditorAdapter {
+	public readonly id = 'contenteditable';
+
+	private readonly host: ContentEditableHost;
+
+	public constructor(host: ContentEditableHost) {
+		this.host = host;
+	}
+
+	public readonly readSelection = (): TextSelectionState | null => {
+		const doc = this.host.ownerDocument;
+		const selection = doc?.getSelection?.();
+
+		if (!selection || selection.rangeCount === 0) {
+			return null;
+		}
+
+		const value = this.host.textContent ?? '';
+		const range = selection.getRangeAt(0);
+
+		// Offsets are within the anchor text node; for the single-text-node
+		// case this matches the element's text content.
+		const start = Math.min(range.startOffset, range.endOffset);
+		const end = Math.max(range.startOffset, range.endOffset);
+
+		return { value, selectionStart: start, selectionEnd: end };
+	};
+
+	public readonly insert = (request: InsertionRequest): InsertResult | null => {
+		const doc = this.host.ownerDocument;
+		const selection = doc?.getSelection?.();
+
+		if (!doc || !selection || selection.rangeCount === 0) {
+			return null;
+		}
+
+		const before = this.readSelection();
+
+		this.restoreFocus();
+
+		try {
+			const range = selection.getRangeAt(0);
+
+			range.deleteContents();
+
+			const node = doc.createTextNode(request.text);
+
+			range.insertNode(node);
+
+			// Collapse after the inserted text so typing continues naturally.
+			range.setStartAfter(node);
+			range.collapse(true);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		} catch {
+			return null;
+		}
+
+		if (before === null) {
+			return null;
+		}
+
+		// Report the computed result: the DOM is the source of truth for the
+		// rendered text, but the caller needs the value/caret pair.
+		return insertAtSelection(before, request.text);
+	};
+
+	public readonly restoreFocus = (): void => {
+		this.host.focus();
+	};
+}

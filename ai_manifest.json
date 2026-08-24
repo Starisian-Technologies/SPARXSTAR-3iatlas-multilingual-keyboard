@@ -110,14 +110,35 @@
 			"path": "packages/core/src/profile.ts"
 		},
 		{
-			"symbol": "isSupportedProfile",
+			"symbol": "isKeyboardAvailable",
 			"type": "function",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
 			"path": "packages/core/src/profile.ts"
 		},
 		{
-			"symbol": "selectSupportedProfiles",
+			"symbol": "isLinguisticallyValidated",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "selectAvailableProfiles",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "selectValidatedProfiles",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "describeValidationStatus",
 			"type": "function",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
@@ -138,21 +159,35 @@
 			"path": "packages/core/src/profile.ts"
 		},
 		{
-			"symbol": "ProfileApprovalStatus",
+			"symbol": "AvailabilityStatus",
 			"type": "type",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
 			"path": "packages/core/src/profile.ts"
 		},
 		{
-			"symbol": "ProfileProvenance",
+			"symbol": "ValidationStatus",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "SourceMetadata",
 			"type": "interface",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
 			"path": "packages/core/src/profile.ts"
 		},
 		{
-			"symbol": "ProfileApproval",
+			"symbol": "KeyboardAvailability",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/profile.ts"
+		},
+		{
+			"symbol": "LinguisticValidation",
 			"type": "interface",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
@@ -188,13 +223,6 @@
 		},
 		{
 			"symbol": "ProfileFonts",
-			"type": "interface",
-			"package": "@starisian/3iatlas-multilingual-input-core",
-			"owner": "Starisian Technologies",
-			"path": "packages/core/src/profile.ts"
-		},
-		{
-			"symbol": "ProfileKeymanBinding",
 			"type": "interface",
 			"package": "@starisian/3iatlas-multilingual-input-core",
 			"owner": "Starisian Technologies",
@@ -299,6 +327,13 @@
 			"path": "packages/adapters/src/index.ts"
 		},
 		{
+			"symbol": "ContentEditableHost",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
 			"symbol": "NativeTextControlAdapter",
 			"type": "class",
 			"package": "@starisian/3iatlas-multilingual-input-adapters",
@@ -314,6 +349,13 @@
 		},
 		{
 			"symbol": "WordPadEditorAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-adapters",
+			"owner": "Starisian Technologies",
+			"path": "packages/adapters/src/index.ts"
+		},
+		{
+			"symbol": "ContentEditableAdapter",
 			"type": "class",
 			"package": "@starisian/3iatlas-multilingual-input-adapters",
 			"owner": "Starisian Technologies",
@@ -362,32 +404,74 @@
 			"path": "packages/keyman/src/index.ts"
 		},
 		{
-			"symbol": "MANDINKA_DRAFT_PROFILE",
+			"symbol": "isSelfHostedAssetUrl",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "createScriptTagEngineLoader",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "KeymanWebFailureReason",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "KeymanWebGlobal",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "KeymanWebOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "KeymanWebAdapter",
+			"type": "class",
+			"package": "@starisian/3iatlas-multilingual-input-keyman",
+			"owner": "Starisian Technologies",
+			"path": "packages/keyman/src/keymanweb.ts"
+		},
+		{
+			"symbol": "WOLOF_SN_PROFILE",
 			"type": "constant",
 			"package": "@starisian/3iatlas-multilingual-input-profiles",
 			"owner": "Starisian Technologies",
 			"path": "packages/profiles/src/index.ts"
 		},
 		{
-			"symbol": "WOLOF_DRAFT_PROFILE",
+			"symbol": "FULA_SN_PROFILE",
 			"type": "constant",
 			"package": "@starisian/3iatlas-multilingual-input-profiles",
 			"owner": "Starisian Technologies",
 			"path": "packages/profiles/src/index.ts"
 		},
 		{
-			"symbol": "FULA_DRAFT_PROFILE",
+			"symbol": "ALL_PROFILES",
 			"type": "constant",
 			"package": "@starisian/3iatlas-multilingual-input-profiles",
 			"owner": "Starisian Technologies",
 			"path": "packages/profiles/src/index.ts"
 		},
 		{
-			"symbol": "DRAFT_PROFILES",
+			"symbol": "MANDINKA_GM_PROFILE",
 			"type": "constant",
 			"package": "@starisian/3iatlas-multilingual-input-profiles",
 			"owner": "Starisian Technologies",
-			"path": "packages/profiles/src/index.ts"
+			"path": "packages/profiles/src/mandinka.ts"
 		},
 		{
 			"symbol": "MultilingualInputContext",
@@ -419,7 +503,7 @@
 		},
 		{
 			"symbol": "InputModeSelector",
-			"type": "constant",
+			"type": "function",
 			"package": "@starisian/3iatlas-multilingual-input-react",
 			"owner": "Starisian Technologies",
 			"path": "packages/react/src/input-mode-selector.tsx"
@@ -454,7 +538,7 @@
 		},
 		{
 			"symbol": "LanguageHelperBar",
-			"type": "constant",
+			"type": "function",
 			"package": "@starisian/3iatlas-multilingual-input-react",
 			"owner": "Starisian Technologies",
 			"path": "packages/react/src/language-helper-bar.tsx"
@@ -468,7 +552,7 @@
 		},
 		{
 			"symbol": "MultilingualInputProvider",
-			"type": "constant",
+			"type": "function",
 			"package": "@starisian/3iatlas-multilingual-input-react",
 			"owner": "Starisian Technologies",
 			"path": "packages/react/src/provider.tsx"

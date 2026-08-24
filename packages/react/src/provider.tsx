@@ -59,10 +59,19 @@ export const MultilingualInputProvider = ({
 		initialProfileId ?? profiles[0]?.id ?? null
 	);
 
-	const activeProfile = useMemo(
-		() => profiles.find((profile) => profile.id === activeProfileId) ?? null,
-		[profiles, activeProfileId]
-	);
+	const activeProfile = useMemo(() => {
+		const selected = profiles.find((profile) => profile.id === activeProfileId);
+
+		if (selected !== undefined) {
+			return selected;
+		}
+
+		// The selected profile is not in the current list — the consumer
+		// swapped the profiles it ships. Fall back to the first available one
+		// rather than rendering nothing, which would silently remove the
+		// helper bar from the page.
+		return profiles[0] ?? null;
+	}, [profiles, activeProfileId]);
 
 	const emitEvent = useCallback(
 		(event: MultilingualInputEvent) => {

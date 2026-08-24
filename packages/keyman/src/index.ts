@@ -18,9 +18,11 @@ import type { LanguageProfile } from '@starisian/3iatlas-multilingual-input-core
 /** Why the full keyboard could not be activated. */
 export type KeymanFailureReason =
 	| 'engine-unavailable'
+	| 'keyboard-unavailable'
 	| 'no-approved-keyboard'
+	| 'licence-not-recorded'
 	| 'asset-load-failed'
-	| 'profile-not-approved';
+	| 'keyboard-activation-failed';
 
 /** Result of attempting to activate the full keyboard. */
 export type KeymanActivation =
@@ -87,11 +89,12 @@ export class NullKeymanAdapter implements KeymanAdapter {
 }
 
 /**
- * Decides whether a profile is eligible for the full keyboard.
+ * Decides whether a profile is eligible for the full Keyman keyboard.
  *
- * Section 5.4 permits only approved keyboard selection by profile, and section
- * 4 forbids claiming support without linguistic review, so an unapproved
- * profile is refused before any asset is fetched.
+ * Gated on technical availability, NOT on AiWA linguistic validation: a
+ * licensed, version-pinned keyboard may be used while its orthography is still
+ * under review. What must never happen is describing that keyboard as
+ * AiWA-validated, which is `isLinguisticallyValidated`'s job, not this one.
  *
  * @param profile Profile the user selected.
  * @return Null when eligible, otherwise the reason it is refused.
@@ -99,16 +102,31 @@ export class NullKeymanAdapter implements KeymanAdapter {
 export const checkKeymanEligibility = (
 	profile: LanguageProfile
 ): KeymanFailureReason | null => {
-	if (profile.approval.status !== 'approved') {
-		return 'profile-not-approved';
+	if (profile.availability.status !== 'available') {
+		return 'keyboard-unavailable';
 	}
 
 	if (
-		profile.keyman.keyboardId === null ||
-		profile.keyman.pinnedVersion === null
+		profile.availability.keymanKeyboardId === null ||
+		profile.availability.pinnedVersion === null
 	) {
 		return 'no-approved-keyboard';
 	}
 
+	if (profile.availability.metadata === null) {
+		return 'licence-not-recorded';
+	}
+
 	return null;
 };
+
+export type {
+	KeymanWebFailureReason,
+	KeymanWebGlobal,
+	KeymanWebOptions,
+} from './keymanweb';
+export {
+	KeymanWebAdapter,
+	createScriptTagEngineLoader,
+	isSelfHostedAssetUrl,
+} from './keymanweb';

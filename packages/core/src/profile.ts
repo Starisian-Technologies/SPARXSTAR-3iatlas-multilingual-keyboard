@@ -1,12 +1,21 @@
 /**
- * Language-profile schema and approval governance.
+ * Language-profile schema, keyboard availability, and linguistic validation.
  *
- * Specification section 5.5 requires every profile to carry its orthographic
- * inventory *and* the evidence that a qualified reviewer approved it. Section 4
- * forbids claiming support for a language merely because its characters render,
- * and forbids substituting a generic Pan-African inventory for linguistic
- * review. This module encodes both rules as types and runtime checks so that an
- * unreviewed profile cannot be presented as supported.
+ * Two independent questions are tracked separately, because conflating them
+ * either blocks shippable engineering work or makes false claims about a
+ * language:
+ *
+ * 1. **Technical availability** — is there a licensed, version-pinned keyboard
+ *    that loads and passes input tests? If so the profile can be selected and
+ *    used.
+ * 2. **Linguistic validation** — has AiWA reviewed the exact language,
+ *    orthography, script, and regional variant? Only then may the profile be
+ *    described as AiWA-validated.
+ *
+ * A profile may be available without being validated. It must never be
+ * presented as validated without the review (specification section 4:
+ * "claim support for a language merely because its characters render" is
+ * prohibited; section 16 gate 10 forbids broad unsupported claims).
  */
 
 /** Writing direction of a profile's script. */
@@ -16,40 +25,69 @@ export type TextDirection = 'ltr' | 'rtl';
 export type NormalizationForm = 'NFC' | 'NFD' | 'NFKC' | 'NFKD';
 
 /**
- * Whether a profile has passed linguistic acceptance.
+ * Whether a keyboard may be selected and used.
  *
- * `provisional` — the inventory is a working draft. It may be loaded for
- * development and review, but it must never be described as a supported
- * language. `approved` — a named reviewer completed the section 14.3
- * acceptance procedure on a recorded date.
+ * `available` — licensed, version-pinned, and verified to load and accept
+ * input. `unavailable` — not yet licensed, pinned, or tested.
  */
-export type ProfileApprovalStatus = 'provisional' | 'approved';
+export type AvailabilityStatus = 'available' | 'unavailable';
 
-/** Where an inventory came from and under what terms it may be used. */
-export interface ProfileProvenance {
-	/** Human-readable citation for the orthographic source. */
+/**
+ * Whether AiWA has reviewed the orthography.
+ *
+ * `validated` — a named AiWA reviewer completed the section 14.3 acceptance
+ * procedure for this exact variant. `pending` — review is scheduled or in
+ * progress with a named reviewer. `not-reviewed` — nobody has looked at it.
+ */
+export type ValidationStatus = 'validated' | 'pending' | 'not-reviewed';
+
+/** Licensing and sourcing for a shipped keyboard or inventory. */
+export interface SourceMetadata {
+	/** Human-readable citation for where this came from. */
 	readonly source: string;
-	/** Licence governing reuse of the inventory data. */
+	/** Licence governing redistribution. */
 	readonly licence: string;
-	/** Documented variant or dialect scope this profile claims. */
-	readonly variantScope: string;
 }
 
 /**
- * Record of linguistic acceptance under specification section 14.3.
+ * Technical availability of the keyboard for a profile.
  *
- * Every field must be populated for a profile to be approved. A profile that
- * has not been reviewed carries `null`, which is the honest representation of
- * "nobody has signed off on this".
+ * This says nothing about orthographic correctness. It says the software can
+ * be loaded and typed with.
  */
-export interface ProfileApproval {
-	readonly status: ProfileApprovalStatus;
-	/** Named reviewer who performed acceptance, or null when unreviewed. */
+export interface KeyboardAvailability {
+	readonly status: AvailabilityStatus;
+	/** Keyman keyboard identifier, when a Keyman layout backs this profile. */
+	readonly keymanKeyboardId: string | null;
+	/** Exact pinned keyboard version. Required when available. */
+	readonly pinnedVersion: string | null;
+	/** Licence and source for the keyboard package. Required when available. */
+	readonly metadata: SourceMetadata | null;
+	/** Notes on what was tested to justify the availability claim. */
+	readonly verifiedBy: string;
+}
+
+/**
+ * AiWA linguistic review of a specific orthography and variant.
+ *
+ * The variant and orthography fields are required regardless of status,
+ * because a profile must always state which variant it claims to represent —
+ * an unreviewed profile that does not even name its target cannot be reviewed.
+ */
+export interface LinguisticValidation {
+	readonly status: ValidationStatus;
+	/** Exact regional variant, e.g. 'Gambian Mandinka'. */
+	readonly variant: string;
+	/** Named orthography, e.g. 'Peace Corps The Gambia'. */
+	readonly orthography: string;
+	/** AiWA reviewer, named as soon as one is assigned. */
 	readonly reviewer: string | null;
-	/** ISO 8601 date of approval, or null when unreviewed. */
-	readonly approvedAt: string | null;
+	/** ISO 8601 date the review completed. Null until validated. */
+	readonly reviewedAt: string | null;
 	/** Revision identifier for the reviewed inventory. */
 	readonly revision: string;
+	/** Provenance and licence for the character inventory itself. */
+	readonly metadata: SourceMetadata;
 }
 
 /** A labeled set of helper-bar characters grouped by function. */
@@ -81,23 +119,10 @@ export interface ProfileFixture {
 export interface ProfileFonts {
 	readonly preferred: string | null;
 	readonly fallbackStack: readonly string[];
-	readonly licence: string | null;
+	readonly metadata: SourceMetadata | null;
 }
 
-/** Approved Keyman keyboard binding, pinned to a version. */
-export interface ProfileKeymanBinding {
-	readonly keyboardId: string | null;
-	readonly pinnedVersion: string | null;
-	readonly licence: string | null;
-}
-
-/**
- * Declarative description of one language's input behavior.
- *
- * Field set follows specification section 5.5. Fields that record review,
- * licensing, fonts, and Keyman bindings are required by the type precisely so
- * that an incomplete profile is visible rather than silently absent.
- */
+/** Declarative description of one language's input behavior. */
 export interface LanguageProfile {
 	readonly id: string;
 	readonly bcp47Tag: string;
@@ -112,9 +137,8 @@ export interface LanguageProfile {
 	readonly combiningRules: readonly CombiningRule[];
 	readonly fixtures: readonly ProfileFixture[];
 	readonly fonts: ProfileFonts;
-	readonly keyman: ProfileKeymanBinding;
-	readonly provenance: ProfileProvenance;
-	readonly approval: ProfileApproval;
+	readonly availability: KeyboardAvailability;
+	readonly validation: LinguisticValidation;
 }
 
 /** Reason a profile failed structural validation. */
@@ -130,11 +154,9 @@ export interface ProfileValidationResult {
 }
 
 /**
- * Validates a profile's structure.
+ * Validates a profile's structure and the evidence behind its claims.
  *
- * A profile is rejected in full rather than partially repaired. Structural
- * validity is necessary but not sufficient for support: see
- * {@link isSupportedProfile}.
+ * A profile is rejected in full rather than partially repaired.
  *
  * @param profile Candidate profile.
  * @return Validation result listing every issue found.
@@ -173,47 +195,75 @@ export const validateLanguageProfile = (
 		'Every helper character group must contain characters.'
 	);
 
-	// Section 5.5 requires provenance, licence, and a documented variant scope.
+	// A profile must always name the variant and orthography it claims to
+	// represent, whether or not it has been reviewed. Without that, review is
+	// impossible and the claim is unfalsifiable.
 	required(
-		profile.provenance.source,
-		'provenance.source',
-		'Orthographic source must be cited.'
+		profile.validation.variant,
+		'validation.variant',
+		'The regional variant this profile claims must be named.'
 	);
 	required(
-		profile.provenance.licence,
-		'provenance.licence',
-		'Inventory licence must be recorded.'
+		profile.validation.orthography,
+		'validation.orthography',
+		'The orthography this profile follows must be named.'
 	);
 	required(
-		profile.provenance.variantScope,
-		'provenance.variantScope',
-		'Variant or dialect scope must be documented.'
+		profile.validation.metadata.source,
+		'validation.metadata.source',
+		'The inventory source must be cited.'
+	);
+	required(
+		profile.validation.metadata.licence,
+		'validation.metadata.licence',
+		'The inventory licence must be recorded.'
 	);
 
-	// An approved profile must carry the evidence of its approval. This is the
-	// rule that stops an unreviewed inventory from being marked supported.
-	// Each field is checked for a non-empty value, not merely a non-null one, so
-	// that an empty string cannot stand in for a reviewer name or a date.
-	if (profile.approval.status === 'approved') {
+	// Availability requires the licence, pin, and verification behind it.
+	if (profile.availability.status === 'available') {
 		required(
-			profile.approval.reviewer ?? '',
-			'approval.reviewer',
-			'An approved profile must name its linguistic reviewer.'
+			profile.availability.pinnedVersion ?? '',
+			'availability.pinnedVersion',
+			'An available keyboard must pin an exact version.'
 		);
 		required(
-			profile.approval.approvedAt ?? '',
-			'approval.approvedAt',
-			'An approved profile must record its approval date.'
+			profile.availability.metadata?.source ?? '',
+			'availability.metadata.source',
+			'An available keyboard must cite its source.'
 		);
 		required(
-			profile.approval.revision,
-			'approval.revision',
-			'An approved profile must record its revision.'
+			profile.availability.metadata?.licence ?? '',
+			'availability.metadata.licence',
+			'An available keyboard must record its licence.'
+		);
+		required(
+			profile.availability.verifiedBy,
+			'availability.verifiedBy',
+			'An available keyboard must record what verified it.'
+		);
+	}
+
+	// Validation requires a named reviewer, a date, and code-point fixtures.
+	if (profile.validation.status === 'validated') {
+		required(
+			profile.validation.reviewer ?? '',
+			'validation.reviewer',
+			'A validated profile must name its AiWA reviewer.'
+		);
+		required(
+			profile.validation.reviewedAt ?? '',
+			'validation.reviewedAt',
+			'A validated profile must record its review date.'
+		);
+		required(
+			profile.validation.revision,
+			'validation.revision',
+			'A validated profile must record its revision.'
 		);
 		check(
 			profile.fixtures.length > 0,
 			'fixtures',
-			'An approved profile must ship code-point fixtures.'
+			'A validated profile must ship code-point fixtures.'
 		);
 	}
 
@@ -221,26 +271,68 @@ export const validateLanguageProfile = (
 };
 
 /**
- * Reports whether a profile may be presented to users as a supported language.
+ * Reports whether a profile's keyboard may be selected and used.
  *
- * Specification section 4 forbids claiming support without linguistic review,
- * and section 16 gate 10 forbids broad unsupported claims. Consumers must gate
- * any "supported languages" listing on this function rather than on the mere
- * presence of a profile.
+ * This is the gate for offering a language in the input UI. It deliberately
+ * does not require linguistic validation, so that engineering and product work
+ * can proceed on a licensed, tested keyboard.
  *
  * @param profile Profile to test.
- * @return True only when the profile is structurally valid and approved.
+ * @return True when the keyboard is available and the profile is structurally valid.
  */
-export const isSupportedProfile = (profile: LanguageProfile): boolean =>
-	profile.approval.status === 'approved' &&
+export const isKeyboardAvailable = (profile: LanguageProfile): boolean =>
+	profile.availability.status === 'available' &&
 	validateLanguageProfile(profile).valid;
 
 /**
- * Filters a set of profiles down to those that may be called supported.
+ * Reports whether AiWA has validated this profile's orthography.
+ *
+ * This is the ONLY gate for describing a language as AiWA-validated, certified,
+ * or approved in any user-facing surface, documentation, or marketing.
+ *
+ * @param profile Profile to test.
+ * @return True only when a named reviewer validated this exact variant.
+ */
+export const isLinguisticallyValidated = (profile: LanguageProfile): boolean =>
+	profile.validation.status === 'validated' &&
+	validateLanguageProfile(profile).valid;
+
+/**
+ * Filters profiles down to those whose keyboards may be offered.
  *
  * @param profiles Profiles to filter.
- * @return Only the approved, structurally valid profiles.
+ * @return The available profiles.
  */
-export const selectSupportedProfiles = (
+export const selectAvailableProfiles = (
 	profiles: readonly LanguageProfile[]
-): readonly LanguageProfile[] => profiles.filter(isSupportedProfile);
+): readonly LanguageProfile[] => profiles.filter(isKeyboardAvailable);
+
+/**
+ * Filters profiles down to those AiWA has validated.
+ *
+ * @param profiles Profiles to filter.
+ * @return The validated profiles.
+ */
+export const selectValidatedProfiles = (
+	profiles: readonly LanguageProfile[]
+): readonly LanguageProfile[] => profiles.filter(isLinguisticallyValidated);
+
+/**
+ * Builds the disclosure a UI must show alongside a profile.
+ *
+ * Consumers should render this verbatim rather than inventing their own
+ * wording, so that an unvalidated profile is never described as certified.
+ *
+ * @param profile Profile being offered.
+ * @return A short, honest status sentence.
+ */
+export const describeValidationStatus = (profile: LanguageProfile): string => {
+	switch (profile.validation.status) {
+		case 'validated':
+			return `${profile.validation.variant} (${profile.validation.orthography}) — linguistically validated by AiWA.`;
+		case 'pending':
+			return `${profile.validation.variant} (${profile.validation.orthography}) — AiWA linguistic review in progress. Not yet validated.`;
+		default:
+			return `${profile.validation.variant} (${profile.validation.orthography}) — not reviewed by AiWA. Orthography unverified.`;
+	}
+};

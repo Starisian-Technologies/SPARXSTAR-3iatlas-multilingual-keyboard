@@ -2,6 +2,7 @@ import { describe, expect, jest, test } from '@jest/globals';
 
 import type { TextSelectionState } from '@starisian/3iatlas-multilingual-input-core';
 import {
+	ContentEditableAdapter,
 	ControlledReactInputAdapter,
 	NativeTextControlAdapter,
 	WordPadEditorAdapter,
@@ -131,5 +132,47 @@ describe('native text control adapter', () => {
 		} finally {
 			doc.execCommand = original;
 		}
+	});
+});
+
+describe('ContentEditableAdapter', () => {
+	test('inserts through a Range rather than replacing markup', () => {
+		document.body.innerHTML = '<div id="host" contenteditable>ba</div>';
+
+		const host = document.getElementById('host') as HTMLDivElement;
+		const textNode = host.firstChild as Text;
+		const range = document.createRange();
+
+		range.setStart(textNode, 2);
+		range.setEnd(textNode, 2);
+
+		const selection = window.getSelection();
+
+		selection?.removeAllRanges();
+		selection?.addRange(range);
+
+		const adapter = new ContentEditableAdapter(host);
+		const result = adapter.insert({
+			text: 'ŋ',
+			profileId: 'mandinka-latn-gm',
+		});
+
+		expect(result?.value).toBe('baŋ');
+		expect(host.textContent).toBe('baŋ');
+	});
+
+	test('returns null when there is no selection', () => {
+		document.body.innerHTML = '<div id="empty" contenteditable></div>';
+
+		const host = document.getElementById('empty') as HTMLDivElement;
+
+		window.getSelection()?.removeAllRanges();
+
+		expect(
+			new ContentEditableAdapter(host).insert({
+				text: 'ŋ',
+				profileId: 'mandinka-latn-gm',
+			})
+		).toBeNull();
 	});
 });

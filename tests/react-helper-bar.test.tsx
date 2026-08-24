@@ -7,8 +7,8 @@ import {
 	MultilingualInputProvider,
 } from '@starisian/3iatlas-multilingual-input-react';
 import {
-	FULA_DRAFT_PROFILE,
-	MANDINKA_DRAFT_PROFILE,
+	FULA_SN_PROFILE,
+	MANDINKA_GM_PROFILE,
 } from '@starisian/3iatlas-multilingual-input-profiles';
 
 const createAdapter = (): EditorAdapter & {
@@ -47,10 +47,7 @@ describe('LanguageHelperBar', () => {
 		const adapter = createAdapter();
 
 		render(
-			<MultilingualInputProvider
-				profiles={[FULA_DRAFT_PROFILE]}
-				adapter={adapter}
-			>
+			<MultilingualInputProvider profiles={[FULA_SN_PROFILE]} adapter={adapter}>
 				<LanguageHelperBar label="Characters" toggleLabel="Toggle" />
 			</MultilingualInputProvider>
 		);
@@ -67,7 +64,7 @@ describe('LanguageHelperBar', () => {
 	test('exposes language and direction context for assistive technology', () => {
 		render(
 			<MultilingualInputProvider
-				profiles={[MANDINKA_DRAFT_PROFILE]}
+				profiles={[MANDINKA_GM_PROFILE]}
 				adapter={createAdapter()}
 			>
 				<LanguageHelperBar label="Characters" toggleLabel="Toggle" />
@@ -85,7 +82,7 @@ describe('LanguageHelperBar', () => {
 
 		render(
 			<MultilingualInputProvider
-				profiles={[FULA_DRAFT_PROFILE]}
+				profiles={[FULA_SN_PROFILE]}
 				adapter={createAdapter()}
 				onEvent={onEvent}
 			>

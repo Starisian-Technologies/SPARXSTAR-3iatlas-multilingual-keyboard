@@ -8,15 +8,34 @@ development, testing, building, and publishing.
 
 Read [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) first — it governs this package.
 
-## No language is currently supported
+## Availability and AiWA validation are separate
 
-Every shipped language profile is **provisional and unapproved**. No reviewer
-has completed linguistic acceptance, so `isSupportedProfile` returns `false` for
-all of them and `selectSupportedProfiles` returns an empty array.
+Two independent states, deliberately not conflated:
 
-Do not present any language in this package as supported.
-[`docs/PROFILE-REVIEW.md`](docs/PROFILE-REVIEW.md) records what each profile is
-missing, including a substantive concern about the Mandinka inventory.
+- **Available** — a licensed, version-pinned keyboard loads and passes input
+  tests. The profile can be selected and typed with. Gate: `isKeyboardAvailable`.
+- **AiWA linguistically validated** — AiWA reviewed the exact language,
+  orthography, script, and regional variant. Gate: `isLinguisticallyValidated`.
+
+A keyboard may be **available without being validated**. That is what lets
+product and engineering work proceed without making false linguistic claims.
+
+**No profile is AiWA-validated yet.** Mandinka, Wolof, and Fula are all
+available; none is certified. Render `describeValidationStatus( profile )`
+verbatim rather than inventing wording — CI fails the build if that string
+would claim validation for an unvalidated profile. See
+[`docs/PROFILE-REVIEW.md`](docs/PROFILE-REVIEW.md).
+
+## Example application
+
+`examples/integration` proves the package against five host surfaces: a native
+input, a textarea, a contenteditable surface, a controlled React input, and the
+WordPad adapter boundary.
+
+```bash
+pnpm run build
+pnpm --filter @starisian/3iatlas-multilingual-input-example run dev
+```
 
 ## Packages
 
@@ -72,17 +91,26 @@ Individual steps: `pnpm run lint`, `pnpm run format`, `pnpm run typecheck`,
 
 ## Status against the specification
 
-Implemented: the module and package boundaries (§5), the profile schema and its
-approval governance (§5.5), input-mode contract and defaults (§6.1), helper-bar
-component with its accessibility rules (§6.3), editor adapters (§5.3), the
-Keyman boundary and its mandatory fallback (§5.4), grapheme-safe cursor movement
-and normalization (§7), preference scoping (§6.2), and non-content events (§12).
+Implemented and verified: module and package boundaries (§5), the availability
+and validation model (§5.5), input-mode contract and Helper default (§6.1),
+helper bar with its accessibility rules (§6.3), native / textarea /
+contenteditable / controlled-React / WordPad adapters (§5.3), the real
+KeymanWeb adapter with self-hosting enforcement, pinning, switching, teardown
+and mandatory Helper fallback (§5.4), grapheme-safe cursors and normalization
+(§7), preference scoping (§6.2), non-content events and no text in storage
+(§10, §12), and published bundle budgets with Helper-path isolation (§9).
 
-Not yet implemented, and not claimed: the KeymanWeb engine itself (Phase 2),
-bundled fonts and their licence review (§8), offline asset caching and published
-size budgets (§9), the physical device matrix (§14.2), IME composition and
-undo/redo verification against a real host editor, and linguistic acceptance for
-every profile (§14.3).
+Not implemented, and not claimed:
+
+- The KeymanWeb **engine** is not vendored. It is self-hosted per deployment —
+  see [`docs/KEYMAN-DEPLOYMENT.md`](docs/KEYMAN-DEPLOYMENT.md).
+- No Keyman keyboard is pinned for any profile yet.
+- No fonts are bundled; §8 licence and coverage work is outstanding.
+- Offline asset caching (§9) is not implemented.
+- **Physical device testing (§14.2) has not been done.** Browser tests run on
+  desktop and mobile Chromium viewports only.
+- Screen-reader and switch-control acceptance (§11) has not been done.
+- **Linguistic acceptance (§14.3) is outstanding for every profile.**
 
 ## Licence and security
 
