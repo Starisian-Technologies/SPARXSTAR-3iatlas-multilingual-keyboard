@@ -64,20 +64,23 @@ const DEFAULT_TIMEOUT_MS = 8000;
  * @return True when the URL is same-origin or relative.
  */
 export const isSelfHostedAssetUrl = (baseUrl: string): boolean => {
-	if (baseUrl.startsWith('/')) {
-		return true;
-	}
-
 	const origin = (globalThis as { location?: { origin?: string } }).location
 		?.origin;
 
 	if (typeof origin !== 'string') {
-		// Without a known origin, only a relative path can be proven local.
-		return false;
+		// A leading double slash is a protocol-relative remote URL, not a local
+		// path. Without an origin, only an ordinary root-relative path can be
+		// proven local.
+		return baseUrl.startsWith('/') && !baseUrl.startsWith('//');
 	}
 
 	try {
-		return new URL(baseUrl, origin).origin === origin;
+		const resolved = new URL(baseUrl, origin);
+
+		return (
+			(resolved.protocol === 'http:' || resolved.protocol === 'https:') &&
+			resolved.origin === origin
+		);
 	} catch {
 		return false;
 	}
@@ -148,7 +151,10 @@ export class KeymanWebAdapter implements KeymanAdapter {
 		}
 
 		// Section 10: no third-party CDN in production.
-		if (!isSelfHostedAssetUrl(source.baseUrl)) {
+		if (
+			!isSelfHostedAssetUrl(source.baseUrl) ||
+			source.pinnedEngineVersion.trim() === ''
+		) {
 			return false;
 		}
 
@@ -158,10 +164,15 @@ export class KeymanWebAdapter implements KeymanAdapter {
 				this.options.timeoutMs ?? DEFAULT_TIMEOUT_MS
 			);
 
-			await engine.init({
-				attachType: 'manual',
-				root: source.baseUrl,
-			});
+			await withTimeout(
+				Promise.resolve(
+					engine.init({
+						attachType: 'manual',
+						root: source.baseUrl,
+					})
+				),
+				this.options.timeoutMs ?? DEFAULT_TIMEOUT_MS
+			);
 
 			this.engine = engine;
 
@@ -200,8 +211,18 @@ export class KeymanWebAdapter implements KeymanAdapter {
 				await this.deactivateKeyboard();
 			}
 
-			await this.engine.addKeyboards(`${keyboardId}@${version}`);
-			await this.engine.setActiveKeyboard(keyboardId, profile.bcp47Tag);
+			const timeoutMs = this.options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+
+			await withTimeout(
+				Promise.resolve(this.engine.addKeyboards(`${keyboardId}@${version}`)),
+				timeoutMs
+			);
+			await withTimeout(
+				Promise.resolve(
+					this.engine.setActiveKeyboard(keyboardId, profile.bcp47Tag)
+				),
+				timeoutMs
+			);
 
 			this.engine.attachToControl(this.options.target);
 			this.attached = true;

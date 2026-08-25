@@ -102,6 +102,7 @@ describe('eligibility is gated on availability, not AiWA validation', () => {
 describe('self-hosting requirement', () => {
 	test('accepts a relative path and rejects a third-party CDN', () => {
 		expect(isSelfHostedAssetUrl('/assets/keyman')).toBe(true);
+		expect(isSelfHostedAssetUrl('//cdn.example.com/keyman')).toBe(false);
 		expect(isSelfHostedAssetUrl('https://cdn.example.com/keyman')).toBe(false);
 	});
 
@@ -116,6 +117,22 @@ describe('self-hosting requirement', () => {
 			adapter.initialize({
 				baseUrl: 'https://cdn.example.com/keyman',
 				pinnedEngineVersion: '17.0.0',
+			})
+		).resolves.toBe(false);
+		expect(loadEngine).not.toHaveBeenCalled();
+	});
+
+	test('initialize refuses an unpinned engine without loading anything', async () => {
+		const loadEngine = jest.fn();
+		const adapter = new KeymanWebAdapter({
+			target: {},
+			loadEngine: loadEngine as never,
+		});
+
+		await expect(
+			adapter.initialize({
+				baseUrl: '/assets/keyman',
+				pinnedEngineVersion: '   ',
 			})
 		).resolves.toBe(false);
 		expect(loadEngine).not.toHaveBeenCalled();
@@ -211,6 +228,40 @@ describe('KeymanWebAdapter lifecycle', () => {
 		});
 
 		expect(await adapter.initialize(LOCAL_SOURCE)).toBe(false);
+	});
+
+	test('times out a hanging engine initialization', async () => {
+		const engine = createEngine();
+
+		engine.init = () => new Promise(() => undefined);
+
+		const adapter = new KeymanWebAdapter({
+			target: {},
+			loadEngine: async () => engine,
+			timeoutMs: 20,
+		});
+
+		expect(await adapter.initialize(LOCAL_SOURCE)).toBe(false);
+		expect(adapter.isAvailable()).toBe(false);
+	});
+
+	test('times out a hanging keyboard activation', async () => {
+		const engine = createEngine();
+
+		engine.addKeyboards = () => new Promise(() => undefined);
+
+		const adapter = new KeymanWebAdapter({
+			target: {},
+			loadEngine: async () => engine,
+			timeoutMs: 20,
+		});
+
+		expect(await adapter.initialize(LOCAL_SOURCE)).toBe(true);
+		await expect(adapter.activateProfile(withKeyboard())).resolves.toEqual({
+			ok: false,
+			reason: 'keyboard-activation-failed',
+		});
+		expect(adapter.isAvailable()).toBe(false);
 	});
 
 	test('recovers to a clean state when activation fails midway', async () => {

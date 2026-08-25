@@ -7,10 +7,9 @@
  * loading fails. Keyman is an optional adapter: Helper mode must never load the
  * engine (section 9).
  *
- * No KeymanWeb engine is bundled here. Section 15 places engine integration in
- * Phase 2, after keyboard and font licensing is recorded (section 16 gate 6).
- * `NullKeymanAdapter` is therefore the only implementation that ships today,
- * and it reports unavailability rather than pretending to activate.
+ * No KeymanWeb engine is bundled here. Consumers may use the real
+ * `KeymanWebAdapter` with a licensed, pinned, self-hosted engine, or the
+ * `NullKeymanAdapter` when no engine is deployed.
  */
 
 import type { LanguageProfile } from '@starisian/3iatlas-multilingual-input-core';

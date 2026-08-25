@@ -15,21 +15,15 @@ export default defineConfig({
 	use: {
 		baseURL: 'http://localhost:4173',
 		trace: 'off',
-		// Use the Chromium preinstalled in the image rather than downloading a
-		// build matching this Playwright version.
-		// In CI Playwright installs a matching Chromium, so let it resolve its
-		// own binary. Locally, use the one preinstalled in the dev image.
-		launchOptions: process.env.CI
-			? {}
-			: {
-					executablePath:
-						process.env.CHROMIUM_PATH ??
-						'/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-				},
+		// CI and normal development use Playwright's matching browser. A custom
+		// executable remains available for development containers that expose one.
+		launchOptions: process.env.CHROMIUM_PATH
+			? { executablePath: process.env.CHROMIUM_PATH }
+			: {},
 	},
 	webServer: {
 		command:
-			'pnpm --filter @starisian/3iatlas-multilingual-input-example run preview',
+			'pnpm --filter @starisian/3iatlas-multilingual-input-example run build && pnpm --filter @starisian/3iatlas-multilingual-input-example run preview',
 		url: 'http://localhost:4173',
 		reuseExistingServer: !process.env.CI,
 		timeout: 120_000,
