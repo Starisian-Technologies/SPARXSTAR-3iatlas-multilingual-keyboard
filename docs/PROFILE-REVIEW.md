@@ -1,74 +1,83 @@
 # Language profile review status
 
-**No language in this repository is supported.** Every profile ships with
-`approval.status: 'provisional'`, and `isSupportedProfile` returns `false` for
-all of them. `selectSupportedProfiles(DRAFT_PROFILES)` returns an empty array.
-That is the intended state until linguistic acceptance is recorded.
+Two independent states are tracked per profile. Conflating them either blocks
+shippable engineering work or makes false claims about a language.
 
-Specification section 4 forbids claiming support for a language merely because
-its characters render, and forbids replacing linguistic review with a generic
-Pan-African character inventory. Section 16 gate 10 requires documentation to
-state exactly which variants and scripts are supported, with no broad claim.
+| State                     | Meaning                                                                                                       | Gate                        |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| **Availability**          | A licensed, version-pinned keyboard loads and passes input tests. The profile may be selected and typed with. | `isKeyboardAvailable`       |
+| **Linguistic validation** | AiWA has reviewed the exact language, orthography, script, and regional variant.                              | `isLinguisticallyValidated` |
 
-## Why the profiles were withdrawn
+**A keyboard may be available without AiWA having certified the language.**
+Never describe an unvalidated profile as AiWA-validated, certified, or
+approved. Render `describeValidationStatus( profile )` verbatim rather than
+inventing wording; a CI guard fails the build if that string would claim
+validation for an unvalidated profile.
 
-The inventories were assembled during scaffolding without a cited orthographic
-source, a reviewer, or a licence. They were previously exported as
-`RELEASE_ONE_PROFILES`, a name that implied release readiness they had not
-earned. They are now exported as `DRAFT_PROFILES` and are review input only.
+## Current state
 
-## What every profile is missing
+| Profile                          | Available         | AiWA validated        | Reviewer          |
+| -------------------------------- | ----------------- | --------------------- | ----------------- |
+| Gambian Mandinka (`mnk-Latn-GM`) | Yes — Helper mode | **No — pending**      | Muhammed Dibbasey |
+| Wolof (`wo-Latn-SN`)             | Yes — Helper mode | **No — not reviewed** | Unassigned        |
+| Fula / Fulfulde (`ff-Latn-SN`)   | Yes — Helper mode | **No — not reviewed** | Unassigned        |
 
-Required by specification section 5.5, absent from all three profiles:
+No profile pins a Keyman keyboard yet, so "available" currently means Helper
+mode. See [`KEYMAN-DEPLOYMENT.md`](KEYMAN-DEPLOYMENT.md).
 
-| Requirement                                         | Status                   |
-| --------------------------------------------------- | ------------------------ |
-| Documented variant / dialect scope                  | Missing                  |
-| Base character inventory                            | Empty                    |
-| Uppercase / lowercase relationships                 | Empty                    |
-| Combining marks and permitted sequences             | Empty                    |
-| Approved fonts and fallback stack                   | None; licence unrecorded |
-| Approved Keyman keyboard ID and pinned version      | None; licence unrecorded |
-| Sample words with expected code-point sequences     | Empty                    |
-| Linguistic reviewer, approval status, revision date | Unreviewed               |
-| Provenance and licence metadata                     | Uncited, uncleared       |
+## Gambian Mandinka — first integration, review pending
 
-## Per-language concerns
+Product decision: Gambian Mandinka in the Peace Corps The Gambia orthography
+already adopted by AiWA. This is the first end-to-end integration and is
+exercised by the browser suite on desktop and mobile viewports.
 
-### Mandinka (`mandinka-latn-gm`) — inventory disputed
+### What changed and why
 
-The helper inventory contains only accented Latin vowels
-(`á à é è í ì ó ò ú ù`). Mandinka orthography is generally understood to require
-characters absent from that list, so the inventory is very likely wrong and not
-merely incomplete. It appears to be a generic diacritic set rather than a
-Mandinka repertoire.
+The previous inventory was ten accented Latin vowels
+(`á à é è í ì ó ò ú ù`). That is a generic diacritic set, not a Mandinka
+repertoire, and it has been removed rather than carried forward.
 
-The inventory has deliberately **not** been amended. Correcting it here would be
-exactly the substitution of engineering judgment for linguistic review that
-section 4 prohibits. Section 17 also records that the canonical Mandinka
-orthography and variant for Release 1 is still an open decision, so there is no
-approved target to correct it toward.
+The replacement reflects the Latin orthography used for Mandinka in The Gambia:
 
-### Wolof (`wolof-latn-sn`) — unverified
+- `ŋ` (U+014B) and `ñ` (U+00F1), with their uppercase forms `Ŋ` and `Ñ` — the
+  letters a writer cannot produce from a stock QWERTY or AZERTY keyboard, which
+  is precisely what the helper bar exists to supply;
+- long vowels written as doubled vowels (`aa ee ii oo uu`), not as diacritics;
+- no tone marking, and therefore no permitted combining sequences.
 
-Section 17 leaves open whether Release 1 fixtures follow the Senegalese official
-orthography exclusively. The profile asserts `wo-Latn-SN` without that decision
-having been made.
+### What is still outstanding
 
-### Fula / Fulfulde (`fula-latn-sn`) — variant split unresolved
+**This inventory was not verified against the Peace Corps source document.**
+That document was not reachable from the build environment. The inventory is
+therefore a starting point for review, not a reviewed artifact, and
+`validation.status` is `pending`.
 
-Section 17 leaves open which regional variants require distinct profiles. The
-profile asserts a single `ff-Latn-SN` profile, which presupposes an answer.
+Muhammed Dibbasey must confirm, per specification section 14.3:
 
-## What approval requires
+- the complete alphabet and every special character;
+- whether the doubled-vowel treatment belongs in the helper bar or only in the
+  base inventory;
+- character ordering and the accessible label for each key;
+- uppercase behavior for `ŋ` and `ñ`;
+- **the fixture words and their exact code-point sequences** — `fixtures` is
+  deliberately empty because those must come from the reviewer, never from an
+  engineer;
+- whether SIL Pan Africa Positional covers this inventory or a language-specific
+  Keyman layout is required.
 
-Per section 14.3, an approved reviewer must type the official alphabet and
-special characters, type the approved fixture words and sentences, confirm
-character ordering and labels, verify uppercase, diacritics, and combining
-behavior, save/close/reopen/copy/export/search the text, and compare rendered
-text and code points against the approved source. Automated tests cannot
-substitute for this.
+Setting `validation.status` to `validated` without a reviewer name, a review
+date, and fixtures is rejected by `validateLanguageProfile` and by CI.
 
-Once complete, set `approval.status` to `'approved'` and populate `reviewer`,
-`approvedAt`, and `fixtures`. `validateLanguageProfile` rejects an `approved`
-profile that lacks any of those three, so the status cannot be set alone.
+## Wolof — engineering unblocked, orthography unreviewed
+
+Available for engineering and product work. Section 17 leaves open whether
+Release 1 follows the Senegalese official orthography exclusively; the profile
+names that as its target but claims no review, and its inventory is carried
+over from the initial scaffold uncited.
+
+## Fula / Fulfulde — engineering unblocked, variant unresolved
+
+Available for engineering and product work. Section 17 leaves the regional
+variant split unresolved, so the profile records its variant as unresolved
+rather than asserting a single Senegalese variant. Its inventory is carried
+over uncited.

@@ -1,98 +1,38 @@
 /**
- * Draft language profiles.
+ * Language profiles.
  *
- * NONE OF THESE PROFILES IS APPROVED. Every profile in this module carries
- * `approval.status: 'provisional'`, which means no qualified reviewer has
- * completed the linguistic acceptance procedure in specification section 14.3.
+ * Availability and linguistic validation are tracked separately. A profile
+ * listed here may be selectable and typable while its orthography is still
+ * under AiWA review — see `isKeyboardAvailable` versus
+ * `isLinguisticallyValidated` in core.
  *
- * Specification section 4 forbids claiming support for a language merely
- * because its characters render, and section 16 gate 10 forbids broad
- * unsupported claims. Consumers must therefore gate any user-facing
- * "supported languages" listing on `isSupportedProfile`, which returns false
- * for everything exported here until review is recorded.
+ * NO PROFILE IN THIS PACKAGE IS AiWA-VALIDATED YET.
+ * `selectValidatedProfiles(ALL_PROFILES)` returns an empty array.
+ * Consumers must render `describeValidationStatus` rather than inventing
+ * their own wording (specification section 4, section 16 gate 10).
  *
- * The inventories below are carried forward from the initial scaffold as
- * review input only. They were assembled without a cited orthographic source
- * and have not been checked against any official alphabet. They are known to
- * be incomplete — see `docs/PROFILE-REVIEW.md` for the specific open concerns,
- * including a substantive doubt about the Mandinka inventory. They are
- * deliberately left as found rather than amended, because section 4 forbids
- * replacing linguistic review with an engineer's guess.
+ * See `docs/PROFILE-REVIEW.md` for per-language review state.
  */
 
-import type {
-	LanguageProfile,
-	ProfileApproval,
-	ProfileFonts,
-	ProfileKeymanBinding,
-} from '@starisian/3iatlas-multilingual-input-core';
+import type { LanguageProfile } from '@starisian/3iatlas-multilingual-input-core';
 
-/** Approval record shared by every unreviewed draft profile. */
-const UNREVIEWED: ProfileApproval = {
-	status: 'provisional',
-	reviewer: null,
-	approvedAt: null,
-	revision: 'draft-0',
-};
+export { MANDINKA_GM_PROFILE } from './mandinka';
 
-/** No font has been licence-reviewed or coverage-tested yet (section 8). */
-const NO_APPROVED_FONT: ProfileFonts = {
-	preferred: null,
-	fallbackStack: [],
-	licence: null,
-};
-
-/** No Keyman keyboard has been evaluated or licence-cleared yet (section 5.4). */
-const NO_KEYMAN_BINDING: ProfileKeymanBinding = {
-	keyboardId: null,
-	pinnedVersion: null,
-	licence: null,
-};
+import { MANDINKA_GM_PROFILE } from './mandinka';
 
 /**
- * Mandinka — DRAFT, NOT APPROVED, INVENTORY DISPUTED.
+ * Wolof — engineering unblocked, orthography NOT reviewed.
  *
- * The helper inventory here contains only accented Latin vowels. Mandinka
- * orthography is generally understood to require characters this list does not
- * contain, so the inventory is very likely wrong as well as unreviewed. It is
- * retained verbatim as the artifact under review. Do not ship it, and do not
- * "correct" it outside the review process — section 17 records that the
- * canonical Mandinka orthography for Release 1 is still an open decision.
+ * Section 17 leaves open whether Release 1 follows the Senegalese official
+ * orthography exclusively, so this profile names that as its target but claims
+ * no review. The inventory is carried over from the initial scaffold and has
+ * not been checked against any source.
  */
-export const MANDINKA_DRAFT_PROFILE: LanguageProfile = {
-	id: 'mandinka-latn-gm',
-	bcp47Tag: 'mnk-Latn-GM',
-	displayName: 'Mandinka',
-	autonym: null,
-	writingSystem: 'Latn',
-	direction: 'ltr',
-	normalizationForm: 'NFC',
-	baseCharacters: [],
-	helperCharacterGroups: [
-		{
-			label: 'Vowels with diacritics',
-			characters: ['á', 'à', 'é', 'è', 'í', 'ì', 'ó', 'ò', 'ú', 'ù'],
-		},
-	],
-	caseRelationships: [],
-	combiningRules: [],
-	fixtures: [],
-	fonts: NO_APPROVED_FONT,
-	keyman: NO_KEYMAN_BINDING,
-	provenance: {
-		source: 'UNCITED — assembled without an orthographic source.',
-		licence: 'UNKNOWN — not cleared for redistribution.',
-		variantScope: 'UNDEFINED — variant and dialect scope not documented.',
-	},
-	approval: UNREVIEWED,
-};
-
-/** Wolof — DRAFT, NOT APPROVED. Inventory uncited and unverified. */
-export const WOLOF_DRAFT_PROFILE: LanguageProfile = {
+export const WOLOF_SN_PROFILE: LanguageProfile = {
 	id: 'wolof-latn-sn',
 	bcp47Tag: 'wo-Latn-SN',
 	displayName: 'Wolof',
-	autonym: null,
+	autonym: 'Wolof',
 	writingSystem: 'Latn',
 	direction: 'ltr',
 	normalizationForm: 'NFC',
@@ -100,63 +40,101 @@ export const WOLOF_DRAFT_PROFILE: LanguageProfile = {
 	helperCharacterGroups: [
 		{
 			label: 'Extended letters',
-			characters: ['ñ', 'ŋ', 'à', 'é', 'ë', 'ó'],
+			characters: ['ñ', 'Ñ', 'ŋ', 'Ŋ', 'à', 'é', 'ë', 'ó'],
 		},
 	],
-	caseRelationships: [],
-	combiningRules: [],
-	fixtures: [],
-	fonts: NO_APPROVED_FONT,
-	keyman: NO_KEYMAN_BINDING,
-	provenance: {
-		source: 'UNCITED — assembled without an orthographic source.',
-		licence: 'UNKNOWN — not cleared for redistribution.',
-		variantScope:
-			'UNDEFINED — Senegalese official orthography not confirmed as canonical.',
-	},
-	approval: UNREVIEWED,
-};
-
-/** Fula / Fulfulde — DRAFT, NOT APPROVED. Regional variant split unresolved. */
-export const FULA_DRAFT_PROFILE: LanguageProfile = {
-	id: 'fula-latn-sn',
-	bcp47Tag: 'ff-Latn-SN',
-	displayName: 'Fula',
-	autonym: null,
-	writingSystem: 'Latn',
-	direction: 'ltr',
-	normalizationForm: 'NFC',
-	baseCharacters: [],
-	helperCharacterGroups: [
-		{
-			label: 'Extended letters',
-			characters: ['ɓ', 'ɗ', 'ƴ', 'ñ', 'ŋ'],
-		},
+	caseRelationships: [
+		{ lower: 'ñ', upper: 'Ñ' },
+		{ lower: 'ŋ', upper: 'Ŋ' },
 	],
-	caseRelationships: [],
 	combiningRules: [],
 	fixtures: [],
-	fonts: NO_APPROVED_FONT,
-	keyman: NO_KEYMAN_BINDING,
-	provenance: {
-		source: 'UNCITED — assembled without an orthographic source.',
-		licence: 'UNKNOWN — not cleared for redistribution.',
-		variantScope:
-			'UNDEFINED — section 17 leaves the regional variant split unresolved.',
+	fonts: { preferred: null, fallbackStack: [], metadata: null },
+	availability: {
+		status: 'available',
+		keymanKeyboardId: null,
+		pinnedVersion: '0.1.0-helper-only',
+		metadata: {
+			source: 'Helper-bar inventory shipped with this package.',
+			licence: 'Proprietary — Starisian Technologies.',
+		},
+		verifiedBy: 'Automated insertion and normalization tests only.',
 	},
-	approval: UNREVIEWED,
+	validation: {
+		status: 'not-reviewed',
+		variant: 'Senegalese Wolof',
+		orthography: 'Senegalese official orthography (target, unconfirmed)',
+		reviewer: null,
+		reviewedAt: null,
+		revision: 'draft-0',
+		metadata: {
+			source:
+				'Carried over from the initial scaffold. No orthographic source ' +
+				'was cited and none has been verified.',
+			licence: 'Unknown — inventory not cleared.',
+		},
+	},
 };
 
 /**
- * Every draft profile in this package.
+ * Fula / Fulfulde — engineering unblocked, orthography NOT reviewed.
  *
- * Named `DRAFT` rather than `RELEASE_ONE` deliberately: there is no release-one
- * profile set until linguistic acceptance is recorded. Passing this array to
- * `selectSupportedProfiles` currently yields an empty array, which is the
- * correct and intended result.
+ * Section 17 leaves the regional variant split unresolved. This profile
+ * asserts a single Senegalese variant, which presupposes an answer, so it
+ * claims no review.
  */
-export const DRAFT_PROFILES: readonly LanguageProfile[] = [
-	MANDINKA_DRAFT_PROFILE,
-	WOLOF_DRAFT_PROFILE,
-	FULA_DRAFT_PROFILE,
+export const FULA_SN_PROFILE: LanguageProfile = {
+	id: 'fula-latn-sn',
+	bcp47Tag: 'ff-Latn-SN',
+	displayName: 'Fula',
+	autonym: 'Fulfulde',
+	writingSystem: 'Latn',
+	direction: 'ltr',
+	normalizationForm: 'NFC',
+	baseCharacters: [],
+	helperCharacterGroups: [
+		{
+			label: 'Extended letters',
+			characters: ['ɓ', 'Ɓ', 'ɗ', 'Ɗ', 'ƴ', 'Ƴ', 'ñ', 'ŋ'],
+		},
+	],
+	caseRelationships: [
+		{ lower: 'ɓ', upper: 'Ɓ' },
+		{ lower: 'ɗ', upper: 'Ɗ' },
+		{ lower: 'ƴ', upper: 'Ƴ' },
+	],
+	combiningRules: [],
+	fixtures: [],
+	fonts: { preferred: null, fallbackStack: [], metadata: null },
+	availability: {
+		status: 'available',
+		keymanKeyboardId: null,
+		pinnedVersion: '0.1.0-helper-only',
+		metadata: {
+			source: 'Helper-bar inventory shipped with this package.',
+			licence: 'Proprietary — Starisian Technologies.',
+		},
+		verifiedBy: 'Automated insertion and normalization tests only.',
+	},
+	validation: {
+		status: 'not-reviewed',
+		variant: 'Unresolved — regional variant split not decided (section 17)',
+		orthography: 'Unresolved',
+		reviewer: null,
+		reviewedAt: null,
+		revision: 'draft-0',
+		metadata: {
+			source:
+				'Carried over from the initial scaffold. No orthographic source ' +
+				'was cited and none has been verified.',
+			licence: 'Unknown — inventory not cleared.',
+		},
+	},
+};
+
+/** Every profile shipped by this package. */
+export const ALL_PROFILES: readonly LanguageProfile[] = [
+	MANDINKA_GM_PROFILE,
+	WOLOF_SN_PROFILE,
+	FULA_SN_PROFILE,
 ];

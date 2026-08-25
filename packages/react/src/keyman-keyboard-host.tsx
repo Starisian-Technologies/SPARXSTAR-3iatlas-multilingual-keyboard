@@ -48,7 +48,7 @@ export const KeymanKeyboardHost = ({
 	describeFailure,
 	onFallback,
 }: KeymanKeyboardHostProps): JSX.Element | null => {
-	const { activeProfile } = useMultilingualInput();
+	const { activeProfile, emitEvent } = useMultilingualInput();
 	const [failure, setFailure] = useState<KeymanFailureReason | null>(null);
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -65,6 +65,9 @@ export const KeymanKeyboardHost = ({
 			}
 
 			setFailure(reason);
+			// Report through the shared event channel as well, so the
+			// documented `keyman-fallback` event is actually emitted.
+			emitEvent({ type: 'keyman-fallback', reason });
 			onFallback(reason);
 		};
 
@@ -107,7 +110,7 @@ export const KeymanKeyboardHost = ({
 			cancelled = true;
 			void adapter.teardown();
 		};
-	}, [adapter, assetSource, activeProfile, onFallback]);
+	}, [adapter, assetSource, activeProfile, onFallback, emitEvent]);
 
 	if (activeProfile === null) {
 		return null;

@@ -410,14 +410,30 @@ Release 1 is complete only when:
 
 ## 17. Open decisions
 
-- Final repository and npm scope names.
-- Which approved Mandinka orthography/variant is Release 1 canonical.
-- Which Fula/Fulfulde regional variants must be distinct profiles.
-- Whether Wolof fixtures follow the Senegalese official orthography exclusively in Release 1.
-- Whether SIL Pan Africa Positional passes all three inventories or requires language-specific layouts.
-- Whether Keyman assets may be redistributed/self-hosted under their individual licences.
-- Which open font provides the required coverage with acceptable mobile size.
-- Whether authenticated input-mode preferences should sync through a future preference service.
+Decisions resolved for the first release, and those deliberately deferred
+beyond it.
+
+### Resolved for Release 1
+
+| Decision                                            | Resolution                                                                                                                                                                                                                                    |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| npm scope and package names                         | `@starisian/3iatlas-multilingual-input`, with `-core`, `-adapters`, `-keyman`, `-profiles`, `-react` siblings.                                                                                                                                |
+| Canonical Mandinka orthography                      | Gambian Mandinka in the Peace Corps The Gambia orthography is the chosen **target** for Release 1. AiWA has adopted that orthography as the target; it has **not** validated the shipped inventory. Review is pending with Muhammed Dibbasey. |
+| Whether availability requires linguistic validation | No. The two are independent states. A licensed, pinned, tested keyboard may be used while AiWA review is outstanding; it may not be described as AiWA-validated.                                                                              |
+| Whether Wolof and Fula block Release 1 engineering  | No. Both are available for engineering and product work while unreviewed, and neither may be presented as AiWA-validated.                                                                                                                     |
+| Keyman asset distribution                           | Self-hosted only. Third-party CDN loading is refused at runtime by `KeymanWebAdapter.initialize`.                                                                                                                                             |
+| Engine bundling                                     | The engine is not vendored in this repository. It is self-hosted per deployment, with its licence recorded in the profile before it ships.                                                                                                    |
+
+### Deferred beyond Release 1
+
+| Decision                                                                                                         | Why deferred                                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Which Fula/Fulfulde regional variants require distinct profiles                                                  | Needs linguistic review that is not scheduled. Fula ships available and unreviewed until then.                                                   |
+| Whether Wolof fixtures follow the Senegalese official orthography exclusively                                    | Same; no reviewer assigned.                                                                                                                      |
+| Whether SIL Pan Africa Positional covers the Gambian Mandinka inventory, or a language-specific layout is needed | Cannot be answered before the inventory is reviewed. No Keyman keyboard is pinned for Mandinka until it is.                                      |
+| Which open font provides required coverage at acceptable mobile size                                             | No font is bundled; section 8 licensing and coverage testing are outstanding.                                                                    |
+| Whether authenticated input-mode preferences sync through a preference service                                   | Preferences are local-only in Release 1. The `PreferenceAdapter` contract already allows a consumer-supplied remote store without an API change. |
+| Repository rename to `sparxstar-3iatlas-multilingual-input`                                                      | Cosmetic; the published package names are already correct.                                                                                       |
 
 ## 18. Governing product principle
 

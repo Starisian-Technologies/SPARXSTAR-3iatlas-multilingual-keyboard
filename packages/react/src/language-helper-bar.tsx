@@ -94,6 +94,10 @@ export const LanguageHelperBar = ({
 								aria-label={
 									describeCharacter?.(character, group.label) ?? character
 								}
+								// Keep focus and selection in the writing
+								// surface: pressing a helper key must insert
+								// at the caret, not move focus to the key.
+								onMouseDown={(event) => event.preventDefault()}
 								onClick={() => insertCharacter(character)}
 							>
 								{character}

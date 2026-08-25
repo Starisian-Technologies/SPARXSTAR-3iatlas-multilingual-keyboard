@@ -7,6 +7,8 @@
  * colour-only state.
  */
 
+import { useId } from 'react';
+
 import type { InputMode } from '@starisian/3iatlas-multilingual-input-core';
 import { INPUT_MODES } from '@starisian/3iatlas-multilingual-input-core';
 
@@ -23,6 +25,11 @@ export interface InputModeSelectorProps {
 	readonly legend: string;
 	/** Modes to hide, e.g. Full keyboard before Phase 2 ships. */
 	readonly hiddenModes?: readonly InputMode[];
+	/**
+	 * Radio-group name. Defaults to a per-instance generated name so that two
+	 * selectors on one page do not share a group and uncheck each other.
+	 */
+	readonly groupName?: string;
 }
 
 /**
@@ -38,8 +45,12 @@ export const InputModeSelector = ({
 	labels,
 	legend,
 	hiddenModes = [],
+	groupName,
 }: InputModeSelectorProps): JSX.Element => {
 	const { inputMode, setInputMode } = useMultilingualInput();
+	const generatedName = useId();
+	// Per-instance name so two selectors on one page are independent groups.
+	const radioGroupName = groupName ?? generatedName;
 	const visibleModes = INPUT_MODES.filter(
 		(mode) => !hiddenModes.includes(mode)
 	);
@@ -47,9 +58,11 @@ export const InputModeSelector = ({
 	return (
 		<fieldset className="tiatlas-input-mode-selector">
 			<legend>{legend}</legend>
+			{visibleModes.map((mode) => (
+				<label key={mode} className="tiatlas-input-mode-selector__option">
 					<input
 						type="radio"
-						name={`tiatlas-input-mode-${legend}`}
+						name={radioGroupName}
 						value={mode}
 						checked={inputMode === mode}
 						onChange={() => setInputMode(mode)}

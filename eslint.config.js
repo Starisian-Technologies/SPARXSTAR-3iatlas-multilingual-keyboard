@@ -59,4 +59,11 @@ export default [
 			'no-undef': 'off',
 		},
 	},
+	{
+		// Build tooling requires a default export by convention.
+		files: ['**/*.config.ts', '**/*.config.js'],
+		rules: {
+			'no-restricted-syntax': 'off',
+		},
+	},
 ];

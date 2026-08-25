@@ -2,6 +2,7 @@ import { describe, expect, jest, test } from '@jest/globals';
 
 import type { TextSelectionState } from '@starisian/3iatlas-multilingual-input-core';
 import {
+	ContentEditableAdapter,
 	ControlledReactInputAdapter,
 	NativeTextControlAdapter,
 	WordPadEditorAdapter,
@@ -131,5 +132,79 @@ describe('native text control adapter', () => {
 		} finally {
 			doc.execCommand = original;
 		}
+	});
+});
+
+describe('ContentEditableAdapter', () => {
+	test('inserts through a Range rather than replacing markup', () => {
+		document.body.innerHTML = '<div id="host" contenteditable>ba</div>';
+
+		const host = document.getElementById('host') as HTMLDivElement;
+		const textNode = host.firstChild as Text;
+		const range = document.createRange();
+
+		range.setStart(textNode, 2);
+		range.setEnd(textNode, 2);
+
+		const selection = window.getSelection();
+
+		selection?.removeAllRanges();
+		selection?.addRange(range);
+
+		const adapter = new ContentEditableAdapter(host);
+		const result = adapter.insert({
+			text: 'ŋ',
+			profileId: 'mandinka-latn-gm',
+		});
+
+		expect(result?.value).toBe('baŋ');
+		expect(host.textContent).toBe('baŋ');
+	});
+
+	test('returns null when there is no selection', () => {
+		document.body.innerHTML = '<div id="empty" contenteditable></div>';
+
+		const host = document.getElementById('empty') as HTMLDivElement;
+
+		window.getSelection()?.removeAllRanges();
+
+		expect(
+			new ContentEditableAdapter(host).insert({
+				text: 'ŋ',
+				profileId: 'mandinka-latn-gm',
+			})
+		).toBeNull();
+	});
+});
+
+describe('ContentEditableAdapter selection ownership', () => {
+	test('refuses to edit when the caret is in a different element', () => {
+		document.body.innerHTML =
+			'<div id="mine" contenteditable>mine</div>' +
+			'<div id="other" contenteditable>other</div>';
+
+		const mine = document.getElementById('mine') as HTMLDivElement;
+		const other = document.getElementById('other') as HTMLDivElement;
+
+		// Put the caret inside the OTHER element.
+		const range = document.createRange();
+
+		range.setStart(other.firstChild as Text, 2);
+		range.setEnd(other.firstChild as Text, 2);
+
+		const selection = window.getSelection();
+
+		selection?.removeAllRanges();
+		selection?.addRange(range);
+
+		const adapter = new ContentEditableAdapter(mine);
+
+		// Must not report success, and must not touch either element.
+		expect(adapter.readSelection()).toBeNull();
+		expect(
+			adapter.insert({ text: 'ŋ', profileId: 'mandinka-latn-gm' })
+		).toBeNull();
+		expect(mine.textContent).toBe('mine');
+		expect(other.textContent).toBe('other');
 	});
 });

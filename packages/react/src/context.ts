@@ -13,13 +13,17 @@ import type {
 	InputMode,
 	LanguageProfile,
 } from '@starisian/3iatlas-multilingual-input-core';
+import type { KeymanFailureReason } from '@starisian/3iatlas-multilingual-input-keyman';
 
 /** Non-content lifecycle events a consumer may subscribe to (section 12). */
 export type MultilingualInputEvent =
 	| { readonly type: 'mode-changed'; readonly mode: InputMode }
 	| { readonly type: 'profile-changed'; readonly profileId: string }
 	| { readonly type: 'character-inserted'; readonly profileId: string }
-	| { readonly type: 'keyman-fallback'; readonly reason: string };
+	| {
+			readonly type: 'keyman-fallback';
+			readonly reason: KeymanFailureReason;
+	  };
 
 /** Value exposed to every component beneath the provider. */
 export interface MultilingualInputContextValue {
@@ -30,6 +34,14 @@ export interface MultilingualInputContextValue {
 	readonly setInputMode: (mode: InputMode) => void;
 	readonly setActiveProfileId: (profileId: string) => void;
 	readonly insertCharacter: (character: string) => void;
+	/**
+	 * Emits a non-content lifecycle event to the provider's `onEvent`.
+	 *
+	 * Exposed so that a component which detects an event the provider cannot
+	 * see — notably `KeymanKeyboardHost` reporting a fallback — reports it
+	 * through the same channel as everything else.
+	 */
+	readonly emitEvent: (event: MultilingualInputEvent) => void;
 }
 
 /** Context backing {@link useMultilingualInput}. */
