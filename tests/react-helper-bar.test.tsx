@@ -102,4 +102,52 @@ describe('LanguageHelperBar', () => {
 		});
 		expect(JSON.stringify(event)).not.toContain('ƴ');
 	});
+
+	/** Verifies rejected host edits do not produce false success telemetry. */
+	test('does not emit an insertion event when the adapter rejects the edit', () => {
+		const onEvent = jest.fn();
+		const baseAdapter = createAdapter();
+		const adapter: EditorAdapter = { ...baseAdapter, insert: () => null };
+
+		render(
+			<MultilingualInputProvider
+				profiles={[FULA_SN_PROFILE]}
+				adapter={adapter}
+				onEvent={onEvent}
+			>
+				<LanguageHelperBar label="Characters" toggleLabel="Toggle" />
+			</MultilingualInputProvider>
+		);
+
+		fireEvent.click(screen.getByRole('button', { name: 'ɗ' }));
+
+		expect(onEvent).not.toHaveBeenCalled();
+		expect(baseAdapter.focusCount).toBe(0);
+	});
+
+	/** Verifies a faulty consumer adapter cannot crash the helper UI. */
+	test('contains adapter exceptions without reporting a successful edit', () => {
+		const onEvent = jest.fn();
+		const adapter: EditorAdapter = {
+			...createAdapter(),
+			insert: () => {
+				throw new Error('host transaction failed');
+			},
+		};
+
+		render(
+			<MultilingualInputProvider
+				profiles={[FULA_SN_PROFILE]}
+				adapter={adapter}
+				onEvent={onEvent}
+			>
+				<LanguageHelperBar label="Characters" toggleLabel="Toggle" />
+			</MultilingualInputProvider>
+		);
+
+		expect(() =>
+			fireEvent.click(screen.getByRole('button', { name: 'ɗ' }))
+		).not.toThrow();
+		expect(onEvent).not.toHaveBeenCalled();
+	});
 });
