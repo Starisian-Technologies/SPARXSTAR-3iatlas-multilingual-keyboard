@@ -109,8 +109,21 @@ export const MultilingualInputProvider = ({
 				activeProfile.normalizationForm
 			);
 
-			adapter.insert({ text, profileId: activeProfile.id });
-			adapter.restoreFocus();
+			// A consumer-provided adapter is a runtime boundary. Treat a rejected
+			// insertion or adapter exception as a no-op: helper-mode failure must not
+			// break ordinary typing, and telemetry must never claim a failed edit.
+			try {
+				const result = adapter.insert({ text, profileId: activeProfile.id });
+
+				if (result === null) {
+					return;
+				}
+
+				adapter.restoreFocus();
+			} catch {
+				return;
+			}
+
 			onEvent?.({
 				type: 'character-inserted',
 				profileId: activeProfile.id,
