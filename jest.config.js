@@ -3,6 +3,8 @@ export default {
 	preset: 'ts-jest/presets/default-esm',
 	testEnvironment: 'jsdom',
 	testMatch: ['<rootDir>/tests/**/*.test.ts', '<rootDir>/tests/**/*.test.tsx'],
+	// jsdom omits Web Crypto and TextEncoder; every target browser has them.
+	setupFiles: ['<rootDir>/tests/setup-web-apis.ts'],
 	moduleNameMapper: {
 		'^@starisian/3iatlas-multilingual-input$':
 			'<rootDir>/packages/multilingual-input/src/index.ts',
@@ -16,6 +18,9 @@ export default {
 			'<rootDir>/packages/profiles/src/index.ts',
 		'^@starisian/3iatlas-multilingual-input-react$':
 			'<rootDir>/packages/react/src/index.ts',
+		'^@starisian/3iatlas-input-ink$': '<rootDir>/packages/ink/src/index.ts',
+		'^@starisian/3iatlas-input-recognition$':
+			'<rootDir>/packages/recognition/src/index.ts',
 	},
 	transform: {
 		'^.+\\.tsx?$': [

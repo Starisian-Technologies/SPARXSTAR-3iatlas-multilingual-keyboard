@@ -25,3 +25,12 @@ export { LanguageHelperBar } from './language-helper-bar';
 
 export type { KeymanKeyboardHostProps } from './keyman-keyboard-host';
 export { KeymanKeyboardHost } from './keyman-keyboard-host';
+
+export type { InkCanvasProps, InkToolbarLabels } from './ink-canvas';
+export { InkCanvas } from './ink-canvas';
+
+export type {
+	RecognitionLabels,
+	RecognitionSuggestionsProps,
+} from './recognition-suggestions';
+export { RecognitionSuggestions } from './recognition-suggestions';

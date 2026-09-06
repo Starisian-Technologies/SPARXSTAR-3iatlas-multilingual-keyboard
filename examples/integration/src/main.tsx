@@ -8,6 +8,9 @@
  * The Keyman full keyboard is wired through the real adapter but no engine is
  * self-hosted here, so selecting it demonstrates the mandatory fallback to
  * Helper mode rather than a working on-screen keyboard.
+ *
+ * The pencil path is demonstrated by `PencilDemo`, which drives the real ink
+ * and recognition packages against whichever surface is currently targeted.
  */
 
 import { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
@@ -36,6 +39,8 @@ import {
 	LanguageHelperBar,
 	MultilingualInputProvider,
 } from '@starisian/3iatlas-multilingual-input-react';
+
+import { PencilDemo } from './pencil';
 
 const MODE_LABELS = {
 	standard: 'Standard',
@@ -240,6 +245,8 @@ const App = () => {
 				<div data-testid="wordpad-output">{wordPadValue}</div>
 				<p>Transactions: {wordPadHistory.current.length}</p>
 			</Surface>
+
+			<PencilDemo adapter={adapter} />
 
 			<section>
 				<h2>Lifecycle events</h2>

@@ -40,6 +40,8 @@ jobs:
         run: node scripts/assert-no-false-validation-claim.mjs
       - name: Check bundle budgets and Helper-path isolation
         run: node scripts/check-bundle-budgets.mjs
+      - name: Assert no package talks to the network or holds a credential
+        run: node scripts/assert-no-network-in-packages.mjs
       - name: Audit dependencies
         run: pnpm audit --audit-level high
 

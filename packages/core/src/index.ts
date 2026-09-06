@@ -56,3 +56,6 @@ export {
 
 export type { RuntimeCapabilities } from './capabilities';
 export { detectCapabilities } from './capabilities';
+
+export type { ConnectivityListener, ConnectivityStatus } from './connectivity';
+export { observeConnectivity, readConnectivity } from './connectivity';

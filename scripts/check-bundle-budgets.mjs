@@ -11,19 +11,38 @@
 import { gzipSync } from 'node:zlib';
 import { readFileSync } from 'node:fs';
 
-/** Gzipped ESM budgets in bytes. */
+/**
+ * Gzipped ESM budgets in bytes.
+ *
+ * These are bandwidth commitments on a platform where a writer may be paying
+ * per megabyte, not aspirational targets. Raising one is a deliberate act that
+ * belongs in a commit message, which is why they are pinned close to actual
+ * size rather than left generously loose.
+ *
+ * `ink` carries `perfect-freehand` (MIT, ~2 KB gzipped) inlined by tsup, plus
+ * the stroke model, serializer, geometry, renderer, and pointer plumbing.
+ * `multilingual-input` grew from a bare re-export barrel into the toolkit
+ * facade and the framework-agnostic helper bar, which is why its budget moved.
+ */
 const BUDGETS = {
 	core: 6_000,
 	adapters: 3_000,
 	profiles: 3_000,
 	keyman: 3_000,
-	react: 4_000,
-	'multilingual-input': 1_000,
+	react: 5_000,
+	'multilingual-input': 3_000,
+	ink: 11_000,
+	recognition: 6_000,
 };
 
-/** Packages a Helper-only consumer loads. None may pull React or Keyman. */
+/**
+ * Packages a Helper-only consumer loads.
+ *
+ * None may pull React, Keyman, ink, or recognition: a product that ships only
+ * the helper bar must not download a handwriting engine it never mounts.
+ */
 const HELPER_PATH = ['core', 'adapters', 'profiles'];
-const FORBIDDEN_IN_HELPER_PATH = ['react', 'keyman'];
+const FORBIDDEN_IN_HELPER_PATH = ['react', 'keyman', 'ink', 'recognition'];
 
 const problems = [];
 const report = [];
@@ -57,13 +76,13 @@ for (const [name, budget] of Object.entries(BUDGETS)) {
 		const text = source.toString('utf8');
 
 		for (const forbidden of FORBIDDEN_IN_HELPER_PATH) {
+			// Two package-name prefixes are in play: the original
+			// `multilingual-input-*` packages and the newer `input-*` ones.
+			const specifier = `(?:multilingual-input-|input-)${forbidden}`;
+
 			if (
-				new RegExp(`from\\s*["'][^"']*multilingual-input-${forbidden}`).test(
-					text
-				) ||
-				new RegExp(`require\\(["'][^"']*multilingual-input-${forbidden}`).test(
-					text
-				) ||
+				new RegExp(`from\\s*["'][^"']*${specifier}`).test(text) ||
+				new RegExp(`require\\(["'][^"']*${specifier}`).test(text) ||
 				new RegExp(`^\\s*import\\s+["']${forbidden}["']`, 'm').test(text)
 			) {
 				problems.push(
@@ -84,5 +103,6 @@ if (problems.length > 0) {
 }
 
 console.log(
-	'\nOK: all packages within budget; Helper path free of React and Keyman.'
+	'\nOK: all packages within budget; Helper path free of React, Keyman, ' +
+		'and ink.'
 );

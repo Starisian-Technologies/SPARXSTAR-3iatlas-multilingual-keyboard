@@ -2,7 +2,7 @@
 	"name": "@starisian/3iatlas-multilingual-input-example",
 	"version": "0.1.0",
 	"private": true,
-	"description": "Integration example proving the package against five host surfaces.",
+	"description": "Integration example proving the toolkit against five host surfaces and the pencil path.",
 	"type": "module",
 	"scripts": {
 		"build": "vite build",
@@ -16,7 +16,10 @@
 		"@starisian/3iatlas-multilingual-input-profiles": "workspace:*",
 		"@starisian/3iatlas-multilingual-input-react": "workspace:*",
 		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
+		"react-dom": "^18.3.1",
+		"@starisian/3iatlas-input-ink": "workspace:*",
+		"@starisian/3iatlas-input-recognition": "workspace:*",
+		"@starisian/3iatlas-multilingual-input": "workspace:*"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-react": "^5.2.0",

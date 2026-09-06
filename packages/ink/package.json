@@ -1,7 +1,7 @@
 {
-	"name": "@starisian/3iatlas-multilingual-input",
+	"name": "@starisian/3iatlas-input-ink",
 	"version": "0.1.0",
-	"description": "Aggregate package for the 3iAtlas Input Toolkit: keyboard, helper bar, and digital ink.",
+	"description": "Digital-ink capture, editing, and serialization for the 3iAtlas Input Toolkit.",
 	"license": "SEE LICENSE IN LICENSE.md",
 	"sideEffects": false,
 	"type": "module",
@@ -30,10 +30,6 @@
 	},
 	"dependencies": {
 		"@starisian/3iatlas-multilingual-input-core": "workspace:*",
-		"@starisian/3iatlas-multilingual-input-adapters": "workspace:*",
-		"@starisian/3iatlas-multilingual-input-keyman": "workspace:*",
-		"@starisian/3iatlas-multilingual-input-profiles": "workspace:*",
-		"@starisian/3iatlas-input-ink": "workspace:*",
-		"@starisian/3iatlas-input-recognition": "workspace:*"
+		"perfect-freehand": "1.2.3"
 	}
 }

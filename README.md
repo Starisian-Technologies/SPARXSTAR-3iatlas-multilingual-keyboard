@@ -1,12 +1,29 @@
-# 3iAtlas Multilingual Input
+# 3iAtlas Input Toolkit
 
 `@starisian/3iatlas-multilingual-input` is a standalone, client-side TypeScript
-package for multilingual text input across 3iAtlas products. It runs in
+package for multilingual input across 3iAtlas products — a keyboard path
+(device keyboard plus the approved helper characters, optionally a Keyman
+layout) and a pencil path (digital ink, optionally recognized). It runs in
 browsers, including Android and iOS web apps. It is not a WordPress plugin, and
 it contains no PHP, no server, and no database. Node is used only for
 development, testing, building, and publishing.
 
 Read [`TECHNICAL_SPEC.md`](TECHNICAL_SPEC.md) first — it governs this package.
+For the pencil path, read
+[`docs/INK-AND-RECOGNITION.md`](docs/INK-AND-RECOGNITION.md) and the decisions
+in [`docs/adr/TOOLKIT-ADR-001`](docs/adr/TOOLKIT-ADR-001-digital-ink-and-recognition-boundary.md).
+
+## No package here makes a network request
+
+Not one, on either path. Handwriting recognition is a provider-neutral PORT:
+the consuming product supplies a recognizer backed by its own authenticated
+server-side endpoint, so no vendor credential can reach a browser bundle
+through this package. The default recognizer is `UnavailableRecognizer`, and
+writing, editing, saving, and reopening ink all work with it in place.
+
+**No handwriting leaves SPARXSTAR today.** Enabling an external recognition
+provider requires AiWA approval and a recorded governance exception to
+`TECHNICAL_SPEC.md` §10 and §4 — see TOOLKIT-ADR-001, Decision 2.
 
 ## Availability and AiWA validation are separate
 
@@ -28,9 +45,11 @@ would claim validation for an unvalidated profile. See
 
 ## Example application
 
-`examples/integration` proves the package against five host surfaces: a native
+`examples/integration` proves the package against five host surfaces — a native
 input, a textarea, a contenteditable surface, a controlled React input, and the
-WordPad adapter boundary.
+WordPad adapter boundary — plus the pencil path: writing, suggestions,
+confirmation, cursor insertion, save/reopen, and offline degradation. It
+exercises the real exported packages and reimplements none of their logic.
 
 ```bash
 pnpm run build
@@ -39,18 +58,21 @@ pnpm --filter @starisian/3iatlas-multilingual-input-example run dev
 
 ## Packages
 
-| Package                                 | Purpose                                                                                                                  |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `…-core`                                | Framework-agnostic types, text primitives, profile schema, preferences, capability detection. No dependencies.           |
-| `…-adapters`                            | Native text control, controlled React input, and WordPad editor adapters.                                                |
-| `…-keyman`                              | Optional KeymanWeb boundary. Ships a null adapter only; the engine is Phase 2.                                           |
-| `…-profiles`                            | Draft (unapproved) language profiles.                                                                                    |
-| `…-react`                               | `MultilingualInputProvider`, `InputModeSelector`, `LanguageHelperBar`, `KeymanKeyboardHost`. React is a peer dependency. |
-| `@starisian/3iatlas-multilingual-input` | Aggregate re-export of core, adapters, keyman, and profiles.                                                             |
+| Package                                 | Purpose                                                                                                                                   |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `…-core`                                | Framework-agnostic types, text primitives, profile schema, preferences, capability detection. No dependencies.                            |
+| `…-adapters`                            | Native text control, controlled React input, and WordPad editor adapters.                                                                 |
+| `…-keyman`                              | Optional KeymanWeb boundary. Ships a null adapter only; the engine is Phase 2.                                                            |
+| `…-profiles`                            | Draft (unapproved) language profiles.                                                                                                     |
+| `…-react`                               | `MultilingualInputProvider`, `InputModeSelector`, `LanguageHelperBar`, `KeymanKeyboardHost`. React is a peer dependency.                  |
+| `…-ink`                                 | Digital ink: Pointer Events capture, versioned vector schema, undo/redo, erase, select, SVG/PNG export. Carries `perfect-freehand` (MIT). |
+| `…-recognition`                         | Provider-neutral recognition port, approved-lexicon contract, versioned cache, suggestion and confirmation flow. No vendor, no network.   |
+| `@starisian/3iatlas-multilingual-input` | Aggregate re-export of core, adapters, keyman, profiles, ink, and recognition, plus the `createInputToolkit` facade and a DOM helper bar. |
 
 Consumers shipping only Helper mode should depend on `core` and `adapters`
-directly so that neither React nor the Keyman surface enters their bundle
-(specification section 9).
+directly so that neither React, the Keyman surface, nor the ink engine enters
+their bundle (specification section 9). CI enforces that isolation and fails
+the build if a Helper-path package reaches for any of them.
 
 The aggregate package intentionally does **not** re-export the React bindings.
 Doing so would force React into every consumer, including non-React products,
