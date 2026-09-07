@@ -11,7 +11,7 @@
  * just lost a page of handwriting should not have to know that.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 import type {
 	InkDocument,
@@ -76,6 +76,7 @@ export const InkCanvas = ({
 	heightPx = 220,
 	className,
 }: InkCanvasProps): JSX.Element => {
+	const promptId = useId();
 	const hostRef = useRef<HTMLDivElement | null>(null);
 	const surfaceRef = useRef<InkSurface | null>(null);
 	const [tool, setToolState] = useState<InkToolType>('pen');
@@ -248,12 +249,21 @@ export const InkCanvas = ({
 				<div
 					className="tiatlas-ink__confirm"
 					role="alertdialog"
-					aria-modal="false"
+					// `aria-modal` is deliberately ABSENT rather than "false":
+					// this confirmation does not trap focus, and claiming
+					// modality it does not enforce misleads assistive
+					// technology. The prompt is wired up as the accessible
+					// name instead, and focus moves to the confirm control, so
+					// it announces reliably without the false claim.
+					aria-labelledby={promptId}
 				>
-					<p>{labels.clearPrompt}</p>
+					<p id={promptId}>{labels.clearPrompt}</p>
 					<button
 						type="button"
 						style={controlStyle}
+						// Focused on open so a screen-reader user lands inside
+						// the confirmation rather than having to hunt for it.
+						ref={(element) => element?.focus()}
 						onClick={() => {
 							surfaceRef.current?.clear();
 							setConfirmingClear(false);

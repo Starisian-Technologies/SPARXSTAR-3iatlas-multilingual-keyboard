@@ -262,6 +262,15 @@ export class RecognitionSession {
 				deadline,
 			]);
 		} catch {
+			// An aborted round that throws is a CANCELLATION, not a provider
+			// fault: switching surface, starting a newer round, or calling
+			// cancel() all abort deliberately, and reporting those as
+			// `provider-error` would tell the writer their recognizer is
+			// broken when nothing is wrong with it.
+			if (round !== this.round || controller?.signal.aborted === true) {
+				return empty('cancelled');
+			}
+
 			// A recognizer that throws is a recognizer that failed. It must
 			// not take the writer's page down with it.
 			return empty('provider-error');
@@ -358,6 +367,7 @@ export class RecognitionSession {
 		suggestions: Pick<SuggestionSet, 'inkDocumentId' | 'strokeIds'>,
 		text: string
 	): InkTranscription {
+		const checked = this.lexicon !== null;
 		const match = this.lexicon?.lookup(text) ?? null;
 
 		return createInkTranscription(
@@ -365,10 +375,13 @@ export class RecognitionSession {
 				inkDocumentId: suggestions.inkDocumentId,
 				strokeIds: suggestions.strokeIds,
 				text,
-				// Typed text that happens to be an approved word is still
-				// typed text: the source records what the writer did, not
-				// what the lexicon thinks of the result.
-				source: match === null ? 'not-listed' : 'typed',
+				// `not-listed` is reserved for a word an approved lexicon was
+				// actually consulted about and did not carry. With no lexicon
+				// loaded nothing was consulted, and recording that as
+				// "not listed" would manufacture a finding about the
+				// Dictionary from an absence of data — the same error as
+				// reporting an unchecked word as approved.
+				source: checked && match === null ? 'not-listed' : 'typed',
 				lexiconEntryId: match?.entryId ?? null,
 				lexiconRevision: match === null ? null : this.lexiconRevision,
 			},

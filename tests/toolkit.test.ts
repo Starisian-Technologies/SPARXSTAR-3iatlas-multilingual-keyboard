@@ -342,10 +342,14 @@ describe('confirmed text reaches the editor verbatim', () => {
 			'kuŋooba'
 		);
 
+		// No lexicon is configured on this toolkit, so nothing was consulted:
+		// the source is `typed`, not `not-listed`. "We did not check" and
+		// "we checked and the Dictionary does not carry it" are different
+		// claims, and only the second is a finding about the Dictionary.
 		expect(events).toEqual([
 			{
 				type: 'text-confirmed',
-				source: 'not-listed',
+				source: 'typed',
 				inApprovedLexicon: false,
 			},
 		]);

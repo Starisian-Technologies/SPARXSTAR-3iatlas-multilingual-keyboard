@@ -32,7 +32,11 @@ const BUDGETS = {
 	react: 5_000,
 	'multilingual-input': 3_000,
 	ink: 11_000,
-	recognition: 6_000,
+	// Raised from 6,000 in the Qodo review round: round tracking for
+	// cooperative cancellation, the recognition deadline, per-language
+	// refresh generations, and the language-switch path. All four are
+	// correctness fixes, so the bytes are earned rather than drift.
+	recognition: 7_000,
 };
 
 /**
@@ -103,6 +107,6 @@ if (problems.length > 0) {
 }
 
 console.log(
-	'\nOK: all packages within budget; Helper path free of React, Keyman, ' +
-		'and ink.'
+	'\nOK: all packages within budget; Helper path free of ' +
+		`${FORBIDDEN_IN_HELPER_PATH.join(', ')}.`
 );

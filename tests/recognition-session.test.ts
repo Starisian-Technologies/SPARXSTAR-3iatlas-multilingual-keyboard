@@ -304,6 +304,23 @@ describe('the word-not-listed path', () => {
 		expect(session.confirmTypedText(subject, 'kuŋo').source).toBe('typed');
 	});
 
+	it('does not claim "not listed" when no lexicon was consulted', () => {
+		// With no lexicon loaded nothing was checked. Recording that as
+		// `not-listed` would manufacture a claim about the Dictionary out of
+		// an absence of data — the mirror of reporting an unchecked word as
+		// approved, which this package also refuses to do.
+		const unchecked = new RecognitionSession({
+			recognizer: new UnavailableRecognizer('offline'),
+			languageTag: 'mnk-Latn-GM',
+			now: CLOCK,
+		});
+		const transcription = unchecked.confirmTypedText(subject, 'kuŋooba');
+
+		expect(transcription.source).toBe('typed');
+		expect(transcription.lexiconEntryId).toBeNull();
+		expect(transcription.lexiconRevision).toBeNull();
+	});
+
 	it('packages evidence without writing anywhere', () => {
 		const transcription = session.confirmTypedText(subject, 'kuŋooba');
 		const evidence = session.offerUnlistedWord(transcription);
@@ -398,6 +415,27 @@ describe('cancelled and superseded rounds cannot reach the writer', () => {
 		void newer;
 		session.cancel();
 		first.release();
+
+		expect((await pending).failure).toBe('cancelled');
+	});
+
+	it('reports a deliberate abort as cancelled, not as a provider error', async () => {
+		const session = sessionWith({
+			id: 'throws-on-abort',
+			isAvailable: () => true,
+			supportedLanguages: () => [],
+			// Rejects when the signal fires, which is what a well-behaved
+			// provider does. That must not read as a provider fault.
+			recognize: async (request) =>
+				new Promise<RecognitionResult>((_resolve, reject) => {
+					request.signal?.addEventListener('abort', () =>
+						reject(new Error('aborted'))
+					);
+				}),
+		});
+		const pending = session.propose(SUBJECT);
+
+		session.cancel();
 
 		expect((await pending).failure).toBe('cancelled');
 	});
