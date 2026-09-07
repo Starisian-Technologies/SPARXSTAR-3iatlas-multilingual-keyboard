@@ -320,6 +320,80 @@ describe('cached storage', () => {
 	});
 });
 
+describe('concurrent and mis-keyed artifacts', () => {
+	it('does not let a slower refresh roll back a newer revision', async () => {
+		const cache = new LexiconCache(new MemoryLexiconStore());
+		const older = artifact('rev-1', ['kuŋo']);
+		const newer = artifact('rev-2', ['kuŋo', 'baa']);
+		let releaseOlder = (): void => undefined;
+		const olderGate = new Promise<void>((resolve) => {
+			releaseOlder = resolve;
+		});
+
+		const olderRefresh = cache.refresh(
+			await manifestEntry('rev-1', older),
+			async () => {
+				await olderGate;
+
+				return older;
+			}
+		);
+
+		// The newer revision is requested second and lands first.
+		await cache.refresh(await manifestEntry('rev-2', newer), async () => newer);
+
+		releaseOlder();
+
+		const result = await olderRefresh;
+
+		expect(result.ok === false && result.reason).toBe('superseded');
+		expect(cache.revisionOf('mnk')).toBe('rev-2');
+	});
+
+	it('discards a stored artifact filed under the wrong language', async () => {
+		const store = new MemoryLexiconStore();
+
+		// A Wolof artifact stored under the Mandinka key. Indexing it would
+		// annotate Mandinka candidates against another language's lexicon.
+		await store.write(
+			'mnk',
+			JSON.stringify({
+				...JSON.parse(artifact('rev-1', ['kuŋo'])),
+				language: 'wol',
+			})
+		);
+
+		const cache = new LexiconCache(store);
+
+		expect(await cache.load('mnk')).toBeNull();
+		expect(await store.read('mnk')).toBeNull();
+	});
+
+	it('an eviction is not undone by a refresh already in flight', async () => {
+		const cache = new LexiconCache(new MemoryLexiconStore());
+		const text = artifact('rev-1', ['kuŋo']);
+		let release = (): void => undefined;
+		const gate = new Promise<void>((resolve) => {
+			release = resolve;
+		});
+
+		const pending = cache.refresh(
+			await manifestEntry('rev-1', text),
+			async () => {
+				await gate;
+
+				return text;
+			}
+		);
+
+		await cache.evict('mnk');
+		release();
+
+		expect((await pending).ok).toBe(false);
+		expect(cache.revisionOf('mnk')).toBeNull();
+	});
+});
+
 describe('manifest reading', () => {
 	it('reads well-formed rows', () => {
 		const entries = readLexiconManifest({

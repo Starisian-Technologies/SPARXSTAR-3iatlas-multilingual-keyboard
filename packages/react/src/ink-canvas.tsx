@@ -116,6 +116,18 @@ export const InkCanvas = ({
 		});
 
 		surfaceRef.current = surface;
+
+		// The replacement surface starts on pen/draw with empty history, so
+		// the toolbar has to start there too. Without this the toolbar could
+		// mark Highlighter or Eraser active, and enable Undo, for state that
+		// belonged to the previous page.
+		setToolState(surface.getTool());
+		setModeState(surface.getMode());
+		setCanUndo(surface.model.canUndo);
+		setCanRedo(surface.model.canRedo);
+		setHasSelection(surface.model.selection.length > 0);
+		setConfirmingClear(false);
+
 		onReadyRef.current?.(surface);
 
 		return () => {

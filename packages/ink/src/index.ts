@@ -71,7 +71,7 @@ export {
 } from './pointer';
 
 export type { InkMode, InkSurface, InkSurfaceOptions } from './surface';
-export { mountInkSurface } from './surface';
+export { MAX_PNG_BLOB_BYTES, mountInkSurface } from './surface';
 
 export type {
 	InkTranscription,

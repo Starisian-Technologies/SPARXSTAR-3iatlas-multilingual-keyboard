@@ -48,8 +48,14 @@ export interface InkSurfaceOptions {
 	/** Eraser and selection hit radius, in CSS pixels. */
 	readonly hitTolerancePx?: number;
 	readonly palmRejection?: PalmRejectionOptions;
-	/** Accessible name for the drawing surface. */
-	readonly label?: string;
+	/**
+	 * Accessible name for the drawing surface.
+	 *
+	 * REQUIRED, and deliberately so: this package ships no user-facing English.
+	 * A default here would put an untranslated string in front of a Mandinka
+	 * writer and their screen reader. The consuming product owns localization.
+	 */
+	readonly label: string;
 	/** Notified after every accepted change. */
 	readonly onChange?: (document: InkDocument) => void;
 	/** Notified when a stroke is completed. */
@@ -88,6 +94,14 @@ export interface InkSurface {
 const MIN_DIMENSION_PX = 1;
 
 /**
+ * Ceiling on a rasterized export, in bytes.
+ *
+ * The repository standard fails a build for an in-memory blob over 5 MB, and
+ * that limit exists because these devices are memory-poor.
+ */
+export const MAX_PNG_BLOB_BYTES = 5 * 1024 * 1024;
+
+/**
  * Mounts an ink surface inside a host element.
  *
  * @param host    Element to draw in. Its size governs the surface size.
@@ -96,7 +110,7 @@ const MIN_DIMENSION_PX = 1;
  */
 export const mountInkSurface = (
 	host: HTMLElement,
-	options: InkSurfaceOptions = {}
+	options: InkSurfaceOptions
 ): InkSurface => {
 	const ownerDocument = host.ownerDocument;
 	const view = ownerDocument.defaultView;
@@ -113,7 +127,7 @@ export const mountInkSurface = (
 	// starts a few pixels late.
 	canvas.style.touchAction = 'none';
 	canvas.setAttribute('role', 'img');
-	canvas.setAttribute('aria-label', options.label ?? 'Handwriting area');
+	canvas.setAttribute('aria-label', options.label);
 
 	host.appendChild(canvas);
 
@@ -280,6 +294,26 @@ export const mountInkSurface = (
 	let strokeStartedAt = 0;
 
 	/**
+	 * Appends an event's samples, preferring the browser's coalesced batch.
+	 *
+	 * Shared by `pointermove` and `pointerup` so both record the same way.
+	 *
+	 * @param event     Pointer event to sample.
+	 * @param startedAt Stroke start, for the relative timestamp.
+	 */
+	const appendCoalesced = (event: PointerEvent, startedAt: number): void => {
+		const coalesced =
+			typeof event.getCoalescedEvents === 'function'
+				? event.getCoalescedEvents()
+				: [];
+		const samples = coalesced.length > 0 ? coalesced : [event];
+
+		for (const sample of samples) {
+			appendSample(sample, startedAt);
+		}
+	};
+
+	/**
 	 * Takes pointer capture, tolerating a browser that refuses.
 	 *
 	 * Capture is an ENHANCEMENT — it keeps a stroke attached when the pen
@@ -316,6 +350,15 @@ export const mountInkSurface = (
 	};
 
 	const onPointerDown = (event: PointerEvent): void => {
+		// One live stroke at a time. A second contact arriving mid-stroke used
+		// to overwrite `liveStroke`/`livePoints`, so the first pointer's
+		// buffered handwriting was silently thrown away and only the newer
+		// pointer could commit. Ignoring the newcomer keeps the mark the
+		// writer is actually making.
+		if (activePointerId !== null && activePointerId !== event.pointerId) {
+			return;
+		}
+
 		const now = performanceNow();
 		const admission = admitPointerSample(
 			event,
@@ -402,15 +445,7 @@ export const mountInkSurface = (
 		// Every sample the browser took since the last frame, not just the
 		// one it chose to deliver. This is what keeps a fast stroke smooth
 		// without raising the handler rate.
-		const coalesced =
-			typeof event.getCoalescedEvents === 'function'
-				? event.getCoalescedEvents()
-				: [];
-		const samples = coalesced.length > 0 ? coalesced : [event];
-
-		for (const sample of samples) {
-			appendSample(sample, strokeStartedAt);
-		}
+		appendCoalesced(event, strokeStartedAt);
 
 		schedulePaint();
 	};
@@ -426,6 +461,14 @@ export const mountInkSurface = (
 
 		if (liveStroke === null) {
 			return;
+		}
+
+		// Append where the pointer actually lifted. Without this a fast stroke
+		// that travelled between two delivered `pointermove` events — or that
+		// only ever produced a down and an up — was saved short of where the
+		// writer stopped, or as a bare dot.
+		if (event.buttons !== 0 || livePoints.length > 0) {
+			appendCoalesced(event, strokeStartedAt);
 		}
 
 		const stroke: InkStroke = { ...liveStroke, points: livePoints };
@@ -505,7 +548,7 @@ export const mountInkSurface = (
 			inkDocumentToSvg(model.document, {
 				presets,
 				trim: svgOptions?.trim ?? true,
-				title: options.label ?? 'Handwriting',
+				title: options.label,
 			}),
 		toPngBlob: () =>
 			new Promise<Blob | null>((resolve) => {
@@ -515,8 +558,36 @@ export const mountInkSurface = (
 					return;
 				}
 
+				// Model edits are synchronous but painting is frame-batched, so
+				// an export requested right after adding, erasing, restoring or
+				// clearing ink would otherwise rasterize the PREVIOUS frame —
+				// disagreeing with what `serialize` and `toSvg` return. Flush
+				// the pending frame first.
+				if (
+					frame !== null &&
+					typeof view?.cancelAnimationFrame === 'function'
+				) {
+					view.cancelAnimationFrame(frame);
+					frame = null;
+				}
+
+				paint();
+
 				try {
-					canvas.toBlob((blob) => resolve(blob), 'image/png');
+					canvas.toBlob((blob) => {
+						// The repository standard caps an in-memory blob at
+						// 5 MB. A large, high-density page can exceed that, and
+						// handing back an oversized raster is worse than
+						// reporting that PNG export is not available for it —
+						// SVG export has no such limit.
+						if (blob !== null && blob.size > MAX_PNG_BLOB_BYTES) {
+							resolve(null);
+
+							return;
+						}
+
+						resolve(blob);
+					}, 'image/png');
 				} catch {
 					resolve(null);
 				}

@@ -1,6 +1,3 @@
-import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
-
 /**
  * End-to-end verification of the pencil path in a real browser.
  *
@@ -9,6 +6,9 @@ import type { Page } from '@playwright/test';
  * device pixel ratio, canvas sizing — only exist in a real engine. jsdom
  * cannot fail any of them.
  */
+
+import { expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
 
 /**
  * Draws a short stroke with the mouse.

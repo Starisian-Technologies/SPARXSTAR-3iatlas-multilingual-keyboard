@@ -183,6 +183,48 @@ describe('the keyboard path through the facade', () => {
 	});
 });
 
+describe('switching profile switches the recognition language', () => {
+	it('sends the newly active profile language tag, not the initial one', async () => {
+		const seen: string[] = [];
+		const toolkit = createInputToolkit({
+			profiles: profiles.ALL_PROFILES,
+			recognizer: {
+				id: 'capturing',
+				isAvailable: () => true,
+				supportedLanguages: () => [],
+				recognize: async (request) => {
+					seen.push(request.languageTag);
+
+					return { ok: true, candidates: [], lexiconRevision: null };
+				},
+			},
+		});
+		const host = document.createElement('div');
+
+		toolkit.mountInk(host, { label: 'Handwriting area' });
+
+		// An empty page short-circuits before the recognizer, so give it ink.
+		toolkit.getInkSurface()?.model.addStroke({
+			id: 's1',
+			tool: 'pen',
+			pointerType: 'pen',
+			color: '#000000',
+			sizePx: 3,
+			opacity: 1,
+			startedAt: 0,
+			points: [{ x: 1, y: 1, pressure: 0.5, t: 0 }],
+		});
+
+		await toolkit.requestRecognition();
+		toolkit.setActiveProfileId('wolof-latn-sn');
+		await toolkit.requestRecognition();
+
+		expect(seen).toEqual(['mnk-Latn-GM', 'wo-Latn-SN']);
+
+		toolkit.destroy();
+	});
+});
+
 describe('surface switching', () => {
 	it('reports the active surface and emits on change', () => {
 		const events: InputToolkitEvent[] = [];

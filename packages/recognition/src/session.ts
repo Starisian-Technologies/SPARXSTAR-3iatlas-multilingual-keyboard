@@ -59,6 +59,15 @@ export interface RecognitionSessionOptions {
 	readonly lexicon?: LexiconIndex | null;
 	/** BCP 47 tag of the writer's selected language. */
 	readonly languageTag: string;
+	/**
+	 * How long to wait for a recognizer before giving up, in milliseconds.
+	 *
+	 * A recognizer is consumer-supplied and may be backed by a network call,
+	 * so it can stall indefinitely. Waiting forever leaves the writer looking
+	 * at a control that never resolves; a deadline turns that into an honest
+	 * "suggestions unavailable".
+	 */
+	readonly timeoutMs?: number;
 	/** Injected clock, so tests are deterministic. */
 	readonly now?: () => Date;
 }
@@ -112,17 +121,33 @@ const annotate = (
 	};
 };
 
+/** Default recognition deadline. Writing must not wait on a stalled provider. */
+export const DEFAULT_RECOGNITION_TIMEOUT_MS = 10_000;
+
 /** Drives one writer's recognition and confirmation flow. */
 export class RecognitionSession {
 	private readonly recognizer: HandwritingRecognizer;
 
 	private readonly lexicon: LexiconIndex | null;
 
-	private readonly languageTag: string;
+	private languageTag: string;
+
+	private readonly timeoutMs: number;
 
 	private readonly now: () => Date;
 
 	private pending: AbortController | null = null;
+
+	/**
+	 * Monotonic round counter.
+	 *
+	 * `AbortSignal` cancellation is COOPERATIVE — the port does not require a
+	 * provider to stop or reject once the signal fires, and a provider may
+	 * race it. So the round is also tracked logically: a result whose round is
+	 * no longer current is discarded rather than shown, which is what stops
+	 * suggestions for an abandoned page appearing over a newer one.
+	 */
+	private round = 0;
 
 	/**
 	 * @param options Session configuration.
@@ -131,7 +156,31 @@ export class RecognitionSession {
 		this.recognizer = options.recognizer;
 		this.lexicon = options.lexicon ?? null;
 		this.languageTag = options.languageTag;
+		this.timeoutMs = options.timeoutMs ?? DEFAULT_RECOGNITION_TIMEOUT_MS;
 		this.now = options.now ?? (() => new Date());
+	}
+
+	/** The language tag requests currently carry. */
+	public get language(): string {
+		return this.languageTag;
+	}
+
+	/**
+	 * Points the session at a different language.
+	 *
+	 * Any round in flight is abandoned: it was asked about the previous
+	 * language, and letting its answer land would annotate the new language's
+	 * ink against the old one's lexicon.
+	 *
+	 * @param languageTag BCP 47 tag of the newly selected language.
+	 */
+	public setLanguageTag(languageTag: string): void {
+		if (languageTag === this.languageTag) {
+			return;
+		}
+
+		this.cancel();
+		this.languageTag = languageTag;
 	}
 
 	/** Whether a recognition round can be attempted right now. */
@@ -183,6 +232,9 @@ export class RecognitionSession {
 			typeof AbortController === 'function' ? new AbortController() : null;
 
 		this.pending = controller;
+		this.round += 1;
+
+		const round = this.round;
 
 		const request: RecognitionRequest = {
 			inkDocumentId: subject.inkDocumentId,
@@ -195,17 +247,38 @@ export class RecognitionSession {
 		};
 
 		let result: RecognitionResult;
+		let timer: ReturnType<typeof setTimeout> | undefined;
 
 		try {
-			result = await this.recognizer.recognize(request);
+			const deadline = new Promise<RecognitionResult>((resolve) => {
+				timer = setTimeout(
+					() => resolve({ ok: false, reason: 'timeout' }),
+					this.timeoutMs
+				);
+			});
+
+			result = await Promise.race([
+				this.recognizer.recognize(request),
+				deadline,
+			]);
 		} catch {
 			// A recognizer that throws is a recognizer that failed. It must
 			// not take the writer's page down with it.
 			return empty('provider-error');
 		} finally {
+			if (timer !== undefined) {
+				clearTimeout(timer);
+			}
+
 			if (this.pending === controller) {
 				this.pending = null;
 			}
+		}
+
+		// The round was cancelled or superseded while the provider was
+		// working. Its answer is about ink the writer has moved on from.
+		if (round !== this.round) {
+			return empty('cancelled');
 		}
 
 		if (!result.ok) {
@@ -223,10 +296,16 @@ export class RecognitionSession {
 		};
 	}
 
-	/** Abandons any round in flight. */
+	/**
+	 * Abandons any round in flight.
+	 *
+	 * Bumps the round as well as aborting, so a provider that ignores the
+	 * abort signal still cannot deliver into a cancelled session.
+	 */
 	public cancel(): void {
 		this.pending?.abort();
 		this.pending = null;
+		this.round += 1;
 	}
 
 	/**

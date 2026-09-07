@@ -57,7 +57,9 @@ export type LexiconRefreshFailure =
 	| 'checksum-mismatch'
 	| 'checksum-unavailable'
 	| 'invalid-payload'
-	| 'revision-mismatch';
+	| 'revision-mismatch'
+	/** A newer refresh for the same language installed first. */
+	| 'superseded';
 
 /** Outcome of a refresh attempt. */
 export type LexiconRefreshResult =
@@ -120,6 +122,16 @@ export class LexiconCache {
 	private readonly indexes = new Map<string, LexiconIndex>();
 
 	/**
+	 * Per-language refresh counter.
+	 *
+	 * Two refreshes for one language can complete out of order, and without
+	 * this the earlier-requested artifact would overwrite the revision the
+	 * later one already installed. A refresh that is no longer the current one
+	 * for its language declines to install.
+	 */
+	private readonly refreshGenerations = new Map<string, number>();
+
+	/**
 	 * @param store Consumer-provided storage.
 	 */
 	public constructor(store: LexiconStore) {
@@ -159,7 +171,11 @@ export class LexiconCache {
 
 		const parsed = parseSpellLexicon(artifact);
 
-		if (!parsed.ok) {
+		// The same language check `refresh` applies, applied on the way in too:
+		// a store entry written under the wrong key would otherwise annotate
+		// one language's candidates against another language's lexicon, and its
+		// opaque revision could make a later refresh report "unchanged".
+		if (!parsed.ok || parsed.lexicon.language !== language) {
 			try {
 				await this.store.remove(language);
 			} catch {
@@ -201,6 +217,14 @@ export class LexiconCache {
 		fetcher: LexiconFetcher,
 		signal?: AbortSignal
 	): Promise<LexiconRefreshResult> {
+		const generation = (this.refreshGenerations.get(entry.language) ?? 0) + 1;
+
+		this.refreshGenerations.set(entry.language, generation);
+
+		/** Whether this refresh is still the newest one for its language. */
+		const isCurrent = (): boolean =>
+			this.refreshGenerations.get(entry.language) === generation;
+
 		const current = await this.load(entry.language);
 
 		if (current !== null && current.revision === entry.revision) {
@@ -248,6 +272,13 @@ export class LexiconCache {
 			return { ok: false, reason: 'revision-mismatch' };
 		}
 
+		// A newer refresh for this language finished while this one was
+		// fetching. Installing now would roll the cache back to an older
+		// revision, so this one stands down.
+		if (!isCurrent()) {
+			return { ok: false, reason: 'superseded' };
+		}
+
 		try {
 			await this.store.write(entry.language, artifact);
 		} catch {
@@ -269,6 +300,12 @@ export class LexiconCache {
 	 */
 	public async evict(language: string): Promise<void> {
 		this.indexes.delete(language);
+		// Invalidate any refresh in flight, so it cannot reinstate what this
+		// call just removed.
+		this.refreshGenerations.set(
+			language,
+			(this.refreshGenerations.get(language) ?? 0) + 1
+		);
 
 		try {
 			await this.store.remove(language);

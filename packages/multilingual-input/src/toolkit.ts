@@ -133,10 +133,15 @@ export interface InputToolkit {
 	readonly setActiveSurface: (surface: InputSurfaceKind) => void;
 
 	// --- pencil path -------------------------------------------------------
-	/** Mounts a digital-ink surface. Replaces any surface already mounted. */
+	/**
+	 * Mounts a digital-ink surface. Replaces any surface already mounted.
+	 *
+	 * `options.label` is required, because the ink surface ships no
+	 * user-facing English of its own.
+	 */
 	readonly mountInk: (
 		host: HTMLElement,
-		options?: InkSurfaceOptions
+		options: InkSurfaceOptions
 	) => InkSurface;
 	/**
 	 * Adopts an ink surface mounted elsewhere.
@@ -253,6 +258,10 @@ export const createInputToolkit = (
 			}
 
 			activeProfile = next;
+			// The recognition session was built with the previous profile's
+			// language tag and would otherwise keep sending it forever, so a
+			// writer who switched language got suggestions for the old one.
+			session.setLanguageTag(next.bcp47Tag);
 			emit({ type: 'profile-changed', profileId: next.id });
 		},
 
@@ -317,9 +326,8 @@ export const createInputToolkit = (
 			ownsInkSurface = true;
 			inkSurface = mountInkSurface(host, {
 				...inkOptions,
-				label: inkOptions?.label ?? 'Handwriting area',
 				onChange: (document) => {
-					inkOptions?.onChange?.(document);
+					inkOptions.onChange?.(document);
 					emit({
 						type: 'ink-changed',
 						strokeCount: document.strokes.length,

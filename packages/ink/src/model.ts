@@ -137,9 +137,16 @@ export class InkDocumentModel {
 		}
 
 		const index = this.current.strokes.length;
+		const edit = { added: [{ index, stroke }], removed: [] };
 
-		this.apply({ added: [{ index, stroke }], removed: [] });
-		this.pushUndo({ added: [{ index, stroke }], removed: [] });
+		// Order matters: history is recorded BEFORE listeners are told. A
+		// listener that reads `canUndo` during the notification — which the
+		// React binding does, to enable its Undo button — would otherwise see
+		// the state from before this edit, leaving Undo disabled after the
+		// writer's very first stroke.
+		this.apply(edit);
+		this.pushUndo(edit);
+		this.emit();
 
 		return true;
 	}
@@ -160,9 +167,17 @@ export class InkDocumentModel {
 			return false;
 		}
 
-		this.apply({ added: [], removed });
-		this.pushUndo({ added: [], removed });
-		this.setSelection(this.selectedIds.filter((id) => !wanted.has(id)));
+		const edit = { added: [], removed };
+
+		// History before notification, as in `addStroke`. The selection is
+		// narrowed by direct assignment rather than through `setSelection`,
+		// which only emits when the selection actually changed — routing the
+		// removal's notification through it meant a removal with nothing
+		// selected notified nobody at all.
+		this.apply(edit);
+		this.pushUndo(edit);
+		this.selectedIds = this.selectedIds.filter((id) => !wanted.has(id));
+		this.emit();
 
 		return true;
 	}
@@ -283,6 +298,7 @@ export class InkDocumentModel {
 
 		this.apply({ added: edit.removed, removed: edit.added });
 		this.redoStack.push(edit);
+		this.emit();
 
 		return true;
 	}
@@ -301,6 +317,7 @@ export class InkDocumentModel {
 
 		this.apply(edit);
 		this.undoStack.push(edit);
+		this.emit();
 
 		return true;
 	}
@@ -352,6 +369,10 @@ export class InkDocumentModel {
 	/**
 	 * Applies an edit to the document.
 	 *
+	 * Deliberately does NOT notify: every caller records history first and
+	 * emits once afterwards, so a listener never observes a document whose
+	 * undo/redo stacks disagree with its strokes.
+	 *
 	 * @param edit Edit to apply.
 	 */
 	private apply(edit: InkEdit): void {
@@ -374,8 +395,6 @@ export class InkDocumentModel {
 			strokes,
 			updatedAt: this.now().toISOString(),
 		};
-
-		this.emit();
 	}
 
 	/**

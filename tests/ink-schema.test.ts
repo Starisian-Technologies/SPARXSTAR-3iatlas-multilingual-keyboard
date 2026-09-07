@@ -173,6 +173,34 @@ describe('corrupted ink is refused rather than repaired', () => {
 		expect(parsed.ok).toBe(false);
 	});
 
+	it('rejects a stroke whose tool is not in the schema', () => {
+		// A stroke built from an invalid cast would index no tool preset and
+		// crash rendering, so the reader refuses it rather than passing it on.
+		const parsed = parseInkDocument({
+			...document([stroke()]),
+			strokes: [{ ...stroke(), tool: 'airbrush' }],
+		});
+
+		expect(parsed.ok).toBe(false);
+
+		if (parsed.ok) {
+			return;
+		}
+
+		expect(parsed.issues.some((issue) => issue.path.endsWith('.tool'))).toBe(
+			true
+		);
+	});
+
+	it('rejects a stroke whose pointerType is not in the schema', () => {
+		const parsed = parseInkDocument({
+			...document([stroke()]),
+			strokes: [{ ...stroke(), pointerType: 'trackball' }],
+		});
+
+		expect(parsed.ok).toBe(false);
+	});
+
 	it('rejects an array where a document is expected', () => {
 		expect(parseInkDocument([]).ok).toBe(false);
 	});

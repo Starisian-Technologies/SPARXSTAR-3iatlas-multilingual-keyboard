@@ -216,6 +216,84 @@ describe('restoring a saved document', () => {
 	});
 });
 
+describe('subscribers see settled state', () => {
+	it('reports canUndo to a listener on the very first stroke', () => {
+		// Regression: `apply` used to notify before `pushUndo` recorded the
+		// edit, so a listener reading `canUndo` during the notification saw
+		// the state from before the stroke. The React toolbar does exactly
+		// that, which left Undo disabled after a writer's first stroke.
+		const model = InkDocumentModel.empty(CANVAS);
+		const seen: boolean[] = [];
+
+		model.subscribe(() => seen.push(model.canUndo));
+		model.addStroke(line('a', 10));
+
+		expect(seen).toEqual([true]);
+	});
+
+	it('reports canRedo to a listener during an undo', () => {
+		const model = InkDocumentModel.empty(CANVAS);
+
+		model.addStroke(line('a', 10));
+
+		const seen: boolean[] = [];
+
+		model.subscribe(() => seen.push(model.canRedo));
+		model.undo();
+
+		expect(seen).toEqual([true]);
+	});
+
+	it('notifies on a removal even when nothing was selected', () => {
+		// Regression: the removal notification used to be routed through
+		// `setSelection`, which emits only when the selection changed. With
+		// nothing selected, erasing and clearing told no listener at all, so
+		// the UI kept showing ink that was already gone.
+		const model = InkDocumentModel.empty(CANVAS);
+
+		model.addStroke(line('a', 10));
+
+		const seen: number[] = [];
+
+		model.subscribe((document) => seen.push(document.strokes.length));
+
+		expect(model.selection).toEqual([]);
+		expect(model.removeStrokes(['a'])).toBe(true);
+		expect(seen).toEqual([0]);
+	});
+
+	it('notifies on a clear with nothing selected', () => {
+		const model = InkDocumentModel.empty(CANVAS);
+
+		model.addStroke(line('a', 10));
+		model.addStroke(line('b', 50));
+
+		const seen: number[] = [];
+
+		model.subscribe((document) => seen.push(document.strokes.length));
+
+		expect(model.clear()).toBe(true);
+		expect(seen).toEqual([0]);
+	});
+
+	it('notifies once for a removal that also narrows the selection', () => {
+		const model = InkDocumentModel.empty(CANVAS);
+
+		model.addStroke(line('a', 10));
+		model.selectAt(50, 10, 4);
+
+		let notifications = 0;
+
+		model.subscribe(() => {
+			notifications += 1;
+		});
+		model.removeStrokes(['a']);
+
+		expect(notifications).toBe(1);
+		expect(model.selection).toEqual([]);
+	});
+});
+
 describe('subscribers', () => {
 	it('keeps working when a listener throws', () => {
 		const model = InkDocumentModel.empty(CANVAS);

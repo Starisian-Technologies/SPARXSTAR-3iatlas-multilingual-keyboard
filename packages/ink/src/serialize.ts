@@ -175,8 +175,15 @@ const readStroke = (
 	const opacity = log.finiteNumber(candidate.opacity, `${path}.opacity`);
 	const startedAt = log.finiteNumber(candidate.startedAt, `${path}.startedAt`);
 
+	// Tracked locally as well as logged: the document-level check would catch
+	// these, but returning a stroke built from an invalid cast leaves a value
+	// in play whose `tool` indexes no preset. Rejecting the stroke here keeps
+	// the guarantee local to the reader instead of depending on a caller.
+	let enumsValid = true;
+
 	if (!TOOL_TYPES.includes(candidate.tool as InkToolType)) {
 		log.add(`${path}.tool`, `Expected one of: ${TOOL_TYPES.join(', ')}.`);
+		enumsValid = false;
 	}
 
 	if (!POINTER_TYPES.includes(candidate.pointerType as InkPointerType)) {
@@ -184,6 +191,7 @@ const readStroke = (
 			`${path}.pointerType`,
 			`Expected one of: ${POINTER_TYPES.join(', ')}.`
 		);
+		enumsValid = false;
 	}
 
 	if (!Array.isArray(candidate.points)) {
@@ -208,6 +216,7 @@ const readStroke = (
 	});
 
 	if (
+		!enumsValid ||
 		id === null ||
 		color === null ||
 		sizePx === null ||

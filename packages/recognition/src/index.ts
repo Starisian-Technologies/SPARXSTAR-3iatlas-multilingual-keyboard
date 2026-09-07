@@ -60,4 +60,4 @@ export type {
 	SuggestionSet,
 	UnlistedWordEvidence,
 } from './session';
-export { RecognitionSession } from './session';
+export { DEFAULT_RECOGNITION_TIMEOUT_MS, RecognitionSession } from './session';

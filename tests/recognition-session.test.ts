@@ -329,6 +329,132 @@ describe('the word-not-listed path', () => {
 	});
 });
 
+describe('cancelled and superseded rounds cannot reach the writer', () => {
+	/**
+	 * Builds a recognizer whose answer is held until released.
+	 *
+	 * @param texts Candidate texts to eventually return.
+	 * @return The recognizer and the release function.
+	 */
+	const stallingRecognizer = (
+		texts: readonly string[]
+	): { recognizer: HandwritingRecognizer; release: () => void } => {
+		let release = (): void => undefined;
+		const gate = new Promise<void>((resolve) => {
+			release = resolve;
+		});
+
+		return {
+			release: () => release(),
+			recognizer: {
+				id: 'stalling',
+				isAvailable: () => true,
+				supportedLanguages: () => ['mnk-Latn-GM'],
+				// Deliberately ignores request.signal, which is what a real
+				// provider is free to do: abort is cooperative.
+				recognize: async (): Promise<RecognitionResult> => {
+					await gate;
+
+					return {
+						ok: true,
+						lexiconRevision: null,
+						candidates: texts.map((text, index) => ({
+							id: `c${index}`,
+							text,
+							confidence: 1,
+							inApprovedLexicon: false,
+							lexiconEntryId: null,
+						})),
+					};
+				},
+			},
+		};
+	};
+
+	it('discards a result that arrives after cancel()', async () => {
+		const { recognizer, release } = stallingRecognizer(['kuŋo']);
+		const session = sessionWith(recognizer);
+		const pending = session.propose(SUBJECT);
+
+		session.cancel();
+		release();
+
+		const result = await pending;
+
+		// The provider ignored the abort signal and answered anyway. The
+		// session still refuses to surface suggestions for abandoned ink.
+		expect(result.candidates).toEqual([]);
+		expect(result.failure).toBe('cancelled');
+	});
+
+	it('discards a result superseded by a newer round', async () => {
+		const first = stallingRecognizer(['stale']);
+		const session = sessionWith(first.recognizer);
+		const pending = session.propose(SUBJECT);
+
+		// A newer round starts and finishes while the first is still stalled.
+		const newer = sessionWith(recognizerReturning(['fresh']));
+
+		void newer;
+		session.cancel();
+		first.release();
+
+		expect((await pending).failure).toBe('cancelled');
+	});
+
+	it('gives up on a recognizer that never answers', async () => {
+		const { recognizer } = stallingRecognizer(['never']);
+		const session = new RecognitionSession({
+			recognizer,
+			lexicon: new LexiconIndex(LEXICON),
+			languageTag: 'mnk-Latn-GM',
+			timeoutMs: 20,
+			now: CLOCK,
+		});
+		const result = await session.propose(SUBJECT);
+
+		// Writing must not wait on a stalled provider indefinitely.
+		expect(result.failure).toBe('timeout');
+		expect(result.candidates).toEqual([]);
+	});
+});
+
+describe('switching language', () => {
+	it('sends the new language tag on the next round', async () => {
+		const seen: RecognitionRequest[] = [];
+		const session = sessionWith({
+			id: 'capturing',
+			isAvailable: () => true,
+			supportedLanguages: () => [],
+			recognize: async (request) => {
+				seen.push(request);
+
+				return { ok: true, candidates: [], lexiconRevision: null };
+			},
+		});
+
+		await session.propose(SUBJECT);
+		session.setLanguageTag('wo-Latn-SN');
+
+		expect(session.language).toBe('wo-Latn-SN');
+
+		await session.propose(SUBJECT);
+
+		expect(seen.map((request) => request.languageTag)).toEqual([
+			'mnk-Latn-GM',
+			'wo-Latn-SN',
+		]);
+	});
+
+	it('is a no-op when the tag is unchanged', () => {
+		const session = sessionWith(new UnavailableRecognizer());
+
+		session.setLanguageTag('mnk-Latn-GM');
+
+		expect(session.language).toBe('mnk-Latn-GM');
+	});
+});
+
 describe('the request handed to a recognizer', () => {
 	it('carries the language tag and the lexicon revision', async () => {
 		// Collected into an array rather than a `let`: the assignment happens

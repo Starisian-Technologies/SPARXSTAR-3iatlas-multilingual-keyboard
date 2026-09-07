@@ -14,7 +14,7 @@
  *   suggestions, not a hidden fallback.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { InkDocument } from '@starisian/3iatlas-input-ink';
 import { inkDocumentToSvg } from '@starisian/3iatlas-input-ink';
@@ -77,6 +77,14 @@ export const RecognitionSuggestions = ({
 	const [ownSpelling, setOwnSpelling] = useState('');
 	const [showingOwnSpelling, setShowingOwnSpelling] = useState(false);
 
+	// A new round is about different ink. Carrying the previous round's draft
+	// forward would let a writer confirm one page's spelling against another
+	// page's handwriting.
+	useEffect(() => {
+		setOwnSpelling('');
+		setShowingOwnSpelling(false);
+	}, [document.id, suggestions]);
+
 	if (suggestions === null) {
 		return null;
 	}
@@ -93,6 +101,12 @@ export const RecognitionSuggestions = ({
 			className={className}
 			aria-label={labels.panel}
 			data-testid="recognition-panel"
+			// The panel appears when an asynchronous round completes. Marking
+			// the whole section polite-live means a screen-reader user is told
+			// that suggestions arrived, not just sighted users — the previous
+			// `role="status"` nodes covered failure and empty results only.
+			aria-live="polite"
+			aria-atomic="false"
 		>
 			<div
 				className="tiatlas-recognition__ink"
