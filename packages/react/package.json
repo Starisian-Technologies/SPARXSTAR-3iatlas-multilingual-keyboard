@@ -30,7 +30,9 @@
 	},
 	"dependencies": {
 		"@starisian/3iatlas-multilingual-input-core": "workspace:*",
-		"@starisian/3iatlas-multilingual-input-keyman": "workspace:*"
+		"@starisian/3iatlas-multilingual-input-keyman": "workspace:*",
+		"@starisian/3iatlas-input-ink": "workspace:*",
+		"@starisian/3iatlas-input-recognition": "workspace:*"
 	},
 	"peerDependencies": {
 		"react": "^18.0.0 || ^19.0.0"

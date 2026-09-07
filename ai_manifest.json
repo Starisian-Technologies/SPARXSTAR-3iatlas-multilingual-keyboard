@@ -563,6 +563,720 @@
 			"package": "@starisian/3iatlas-multilingual-input-react",
 			"owner": "Starisian Technologies",
 			"path": "packages/react/src/provider.tsx"
+		},
+		{
+			"symbol": "InkPoint",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkStroke",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkCanvasSize",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkDocument",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkPointerType",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkToolType",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "INK_SCHEMA_VERSION",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "NO_PRESSURE",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "createInkId",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "createInkDocument",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "hasPressureData",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/schema.ts"
+		},
+		{
+			"symbol": "InkParseIssue",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/serialize.ts"
+		},
+		{
+			"symbol": "InkParseResult",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/serialize.ts"
+		},
+		{
+			"symbol": "serializeInkDocument",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/serialize.ts"
+		},
+		{
+			"symbol": "parseInkDocument",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/serialize.ts"
+		},
+		{
+			"symbol": "InkBounds",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/geometry.ts"
+		},
+		{
+			"symbol": "strokeBounds",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/geometry.ts"
+		},
+		{
+			"symbol": "documentBounds",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/geometry.ts"
+		},
+		{
+			"symbol": "strokeContainsPoint",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/geometry.ts"
+		},
+		{
+			"symbol": "findStrokeAtPoint",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/geometry.ts"
+		},
+		{
+			"symbol": "InkModelListener",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/model.ts"
+		},
+		{
+			"symbol": "MAX_HISTORY_ENTRIES",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/model.ts"
+		},
+		{
+			"symbol": "InkDocumentModel",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/model.ts"
+		},
+		{
+			"symbol": "InkToolPreset",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "InkCanvasRenderOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "InkSvgOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "DEFAULT_TOOL_PRESETS",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "strokeOutline",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "outlineToPathData",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "strokePathData",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "renderInkToCanvas",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "inkDocumentToSvg",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/render.ts"
+		},
+		{
+			"symbol": "PointerSample",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PalmRejectionState",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PalmRejectionOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PointerRejection",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PointerAdmission",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PALM_CONTACT_SIZE_PX",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "PEN_PRIORITY_WINDOW_MS",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "toInkPointerType",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "admitPointerSample",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "advancePalmRejection",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/pointer.ts"
+		},
+		{
+			"symbol": "InkSurfaceOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/surface.ts"
+		},
+		{
+			"symbol": "InkSurface",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/surface.ts"
+		},
+		{
+			"symbol": "InkMode",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/surface.ts"
+		},
+		{
+			"symbol": "mountInkSurface",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/surface.ts"
+		},
+		{
+			"symbol": "InkTranscription",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "TranscriptionInput",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "TranscriptionSource",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "TRANSCRIPTION_SCHEMA_VERSION",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "createInkTranscription",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "isTranscriptionIntact",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-ink",
+			"owner": "Starisian Technologies",
+			"path": "packages/ink/src/transcription.ts"
+		},
+		{
+			"symbol": "RecognitionRequest",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "RecognitionCandidate",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "HandwritingRecognizer",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "RecognitionFailureReason",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "RecognitionResult",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "UnavailableRecognizer",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "isHandwritingRecognizer",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/port.ts"
+		},
+		{
+			"symbol": "LexiconEntry",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "SpellLexicon",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconParseIssue",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconMatch",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconEntryStatus",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconParseResult",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "SPELL_LEXICON_SCHEMA_VERSION",
+			"type": "constant",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconIndex",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "isNfc",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "parseSpellLexicon",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon.ts"
+		},
+		{
+			"symbol": "LexiconManifestEntry",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "LexiconStore",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "LexiconFetcher",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "LexiconRefreshFailure",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "LexiconRefreshResult",
+			"type": "type",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "LexiconCache",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "MemoryLexiconStore",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "sha256Hex",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "readLexiconManifest",
+			"type": "function",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/lexicon-cache.ts"
+		},
+		{
+			"symbol": "SuggestionSet",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/session.ts"
+		},
+		{
+			"symbol": "RecognitionSessionOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/session.ts"
+		},
+		{
+			"symbol": "RecognitionSubject",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/session.ts"
+		},
+		{
+			"symbol": "UnlistedWordEvidence",
+			"type": "interface",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/session.ts"
+		},
+		{
+			"symbol": "RecognitionSession",
+			"type": "class",
+			"package": "@starisian/3iatlas-input-recognition",
+			"owner": "Starisian Technologies",
+			"path": "packages/recognition/src/session.ts"
+		},
+		{
+			"symbol": "ConnectivityStatus",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/connectivity.ts"
+		},
+		{
+			"symbol": "ConnectivityListener",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/connectivity.ts"
+		},
+		{
+			"symbol": "readConnectivity",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/connectivity.ts"
+		},
+		{
+			"symbol": "observeConnectivity",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-core",
+			"owner": "Starisian Technologies",
+			"path": "packages/core/src/connectivity.ts"
+		},
+		{
+			"symbol": "InputToolkitStatus",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "InputToolkitOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "InputToolkit",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "InputSurfaceKind",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "InputToolkitEvent",
+			"type": "type",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "createInputToolkit",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/toolkit.ts"
+		},
+		{
+			"symbol": "HelperBarOptions",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/helper-bar.ts"
+		},
+		{
+			"symbol": "HelperBarHandle",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/helper-bar.ts"
+		},
+		{
+			"symbol": "mountHelperBar",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input",
+			"owner": "Starisian Technologies",
+			"path": "packages/multilingual-input/src/helper-bar.ts"
+		},
+		{
+			"symbol": "InkToolbarLabels",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/ink-canvas.tsx"
+		},
+		{
+			"symbol": "InkCanvasProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/ink-canvas.tsx"
+		},
+		{
+			"symbol": "InkCanvas",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/ink-canvas.tsx"
+		},
+		{
+			"symbol": "RecognitionLabels",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/recognition-suggestions.tsx"
+		},
+		{
+			"symbol": "RecognitionSuggestionsProps",
+			"type": "interface",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/recognition-suggestions.tsx"
+		},
+		{
+			"symbol": "RecognitionSuggestions",
+			"type": "function",
+			"package": "@starisian/3iatlas-multilingual-input-react",
+			"owner": "Starisian Technologies",
+			"path": "packages/react/src/recognition-suggestions.tsx"
 		}
 	]
 }
