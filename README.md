@@ -101,7 +101,11 @@ const result = insertAtSelection(
 
 ## Development
 
-Requires Node 20+ and pnpm 9.
+Developing in this repository requires Node 26 (supported until 2029-04-30; the
+floor is `engines.node` in the root [`package.json`](package.json), and `.nvmrc`
+selects it) and pnpm 9. The published `@starisian/*` packages declare a lower
+consumer floor, Node 24 (supported until 2028-04-30), in each
+`packages/*/package.json`, so apps that install them are not forced onto 26.
 
 ```bash
 pnpm install

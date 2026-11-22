@@ -22,7 +22,7 @@
 		"access": "restricted"
 	},
 	"engines": {
-		"node": ">=20"
+		"node": ">=24"
 	},
 	"scripts": {
 		"build": "tsup src/index.ts --format esm,cjs --dts --clean",

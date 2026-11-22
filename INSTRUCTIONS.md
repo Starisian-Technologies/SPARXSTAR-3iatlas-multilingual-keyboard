@@ -24,7 +24,9 @@ and runtime constraints remain authoritative in [`AGENTS.md`](AGENTS.md).
 - Every source file, class, method, function, global, and constant is documented.
 - Security, privacy, internationalization, RTL behavior, keyboard access, and screen
   reader announcements have been considered.
-- Node checks run with Node 20 and pnpm; `pnpm run validate` passes end to end.
+- Node checks run on the floor declared in the root `engines.node` (currently Node 26,
+  supported until 2029-04-30) with pnpm; published packages declare Node 24
+  (supported until 2028-04-30) for consumers; `pnpm run validate` passes end to end.
 - Built files, if any, are reproducible and are written only to each package's `dist/`.
 
 ## Review order
