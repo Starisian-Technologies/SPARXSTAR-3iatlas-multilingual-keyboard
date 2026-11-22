@@ -6,7 +6,7 @@
 	"license": "SEE LICENSE IN LICENSE.md",
 	"type": "module",
 	"engines": {
-		"node": ">=20"
+		"node": ">=26"
 	},
 	"packageManager": "pnpm@9.15.9",
 	"scripts": {
