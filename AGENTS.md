@@ -47,15 +47,15 @@ If it cannot fail a build, it is not a standard. It is a suggestion.
 Version Policy
 --------------
 
-| Component  | Version                                           | Policy                                                                                            |
-| ---------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| PHP        | 8.2 minimum, 8.3 target                           | CI tests both. Code must pass on both.                                                            |
-| WordPress  | 6.9 floor (Abilities API), current stable ceiling | Rolling: N and N-1 minors supported. Update CI when WordPress releases.                           |
-| OS         | Ubuntu 24 LTS                                     | CI runners use Ubuntu 24. Do not assume Ubuntu 22 or Debian.                                      |
-| MariaDB    | Current stable                                    | Provider-agnostic. No provider-specific extensions without abstraction layer.                     |
-| Node.js    | 26, supported until 2029-04-30                    | The floor is `engines.node` in `package.json`; CI runs it. Dates: nodejs/Release `schedule.json`. |
-| TypeScript | 5.0+ strict                                       | Required for all new JS. JavaScript-only files are legacy.                                        |
-| React      | 18                                                | Ships with `@wordpress/scripts`. Do not upgrade independently.                                    |
+| Component  | Version                                           | Policy                                                                                                                                                                 |
+| ---------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PHP        | 8.2 minimum, 8.3 target                           | CI tests both. Code must pass on both.                                                                                                                                 |
+| WordPress  | 6.9 floor (Abilities API), current stable ceiling | Rolling: N and N-1 minors supported. Update CI when WordPress releases.                                                                                                |
+| OS         | Ubuntu 24 LTS                                     | CI runners use Ubuntu 24. Do not assume Ubuntu 22 or Debian.                                                                                                           |
+| MariaDB    | Current stable                                    | Provider-agnostic. No provider-specific extensions without abstraction layer.                                                                                          |
+| Node.js    | 26, supported until 2029-04-30                    | The floor is the root `engines.node`; CI runs it. Published packages declare `>=24` (supported until 2028-04-30) for consumers. Dates: nodejs/Release `schedule.json`. |
+| TypeScript | 5.0+ strict                                       | Required for all new JS. JavaScript-only files are legacy.                                                                                                             |
+| React      | 18                                                | Ships with `@wordpress/scripts`. Do not upgrade independently.                                                                                                         |
 
 **Version numbers in this file are updated when the system is updated. The policy --- current stable, rolling window --- does not change.**
 
